@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevExpress.Win.Design" Version="21.2.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="AForge">
+      <HintPath>..\..\..\..\..\..\CNET_V7_Domain\Attachment dll\AForge.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video">
+      <HintPath>..\..\..\..\..\..\CNET_V7_Domain\Attachment dll\AForge.Video.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge.Video.DirectShow">
+      <HintPath>..\..\..\..\..\..\CNET_V7_Domain\Attachment dll\AForge.Video.DirectShow.dll</HintPath>
+    </Reference>
+    <Reference Include="AxInterop.WMPLib">
+      <HintPath>..\..\..\..\..\..\CNET_V7_Domain\Attachment dll\AxInterop.WMPLib.dll</HintPath>
+    </Reference>
+    <Reference Include="CNET.Progress.Reporter">
+      <HintPath>..\..\..\..\..\..\CNET_V7_Domain\CNET.Progress.Reporter.dll</HintPath>
+    </Reference>
+    <Reference Include="CNET_V7_Domain">
+      <HintPath>..\..\..\..\..\..\CNET_V7_Domain\CNET_V7_Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.WIA">
+      <HintPath>..\..\..\..\..\..\CNET_V7_Domain\Attachment dll\Interop.WIA.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.WMPLib">
+      <HintPath>..\..\..\..\..\..\CNET_V7_Domain\Attachment dll\Interop.WMPLib.dll</HintPath>
+    </Reference>
+    <Reference Include="LocalBuffer">
+      <HintPath>..\LocalBuffer\bin\Debug\net6.0-windows\LocalBuffer.dll</HintPath>
+    </Reference>
+    <Reference Include="ProcessManager">
+      <HintPath>..\ProcessManager\bin\Debug\net6.0-windows\ProcessManager.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

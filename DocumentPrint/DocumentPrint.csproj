@@ -1,0 +1,89 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="APICall\**" />
+    <EmbeddedResource Remove="APICall\**" />
+    <None Remove="APICall\**" />
+    <Page Remove="APICall\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Template\XtraPrintOut.cs" />
+    <Compile Remove="Template\XtraPrintOut.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Template\XtraPrintOut.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Template\RecieptReport.vsrepx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Template\RecieptReport.vsrepx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="HelperClass\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevExpress.Win.Design" Version="21.2.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CNET.API.Manager\API.Manager.csproj" />
+    <ProjectReference Include="..\..\ScribbleWinTab\ScribbleWinTab\ScribbleWinTab.csproj" />
+    <ProjectReference Include="..\FTPInterface\FTPInterface.csproj" />
+    <ProjectReference Include="..\LocalBuffer\LocalBuffer.csproj" />
+    <ProjectReference Include="..\ProcessManager\ProcessManager.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="CNET_V7_Domain">
+      <HintPath>..\..\..\..\..\..\CNET_V7_Domain\CNET_V7_Domain.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Template\PackagePrintout.cs" />
+    <Compile Update="Template\RecieptReport.cs">
+      <DependentUpon>RecieptReport.vsrepx</DependentUpon>
+    </Compile>
+    <Compile Update="Template\RecieptReport.Designer.cs">
+      <DependentUpon>RecieptReport.vsrepx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+</Project>

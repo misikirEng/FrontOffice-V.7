@@ -1,0 +1,101 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Modals\**" />
+    <Compile Remove="PrintOut\**" />
+    <EmbeddedResource Remove="Modals\**" />
+    <EmbeddedResource Remove="PrintOut\**" />
+    <None Remove="Modals\**" />
+    <None Remove="PrintOut\**" />
+    <Page Remove="Modals\**" />
+    <Page Remove="PrintOut\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="frmEventDocumentBrowser.cs" />
+    <Compile Remove="frmEventDocumentBrowser.Designer.cs" />
+    <Compile Remove="frmReports.cs" />
+    <Compile Remove="frmReports.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="frmEventDocumentBrowser.resx" />
+    <EmbeddedResource Remove="frmReports.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Modals\EventDetailForm.cs" />
+    <Compile Include="Modals\EventDetailForm.Designer.cs" />
+    <Compile Include="Modals\EventEditor.cs" />
+    <Compile Include="Modals\EventEditor.Designer.cs" />
+    <Compile Include="Modals\EventFolio.cs" />
+    <Compile Include="Modals\EventFolio.Designer.cs" />
+    <Compile Include="Modals\frmCashReceipt.cs" />
+    <Compile Include="Modals\frmCashReceipt.Designer.cs" />
+    <Compile Include="Modals\frmFrontOfficePOS.cs" />
+    <Compile Include="Modals\frmFrontOfficePOS.Designer.cs" />
+    <Compile Include="Modals\EventRequirement.cs" />
+    <Compile Include="Modals\EventRequirement.Designer.cs" />
+    <Compile Include="Modals\frmNonCashPayments.cs" />
+    <Compile Include="Modals\frmNonCashPayments.Designer.cs" />
+    <Compile Include="Modals\UIMaintainCustomer.cs" />
+    <Compile Include="Modals\UIMaintainCustomer.Designer.cs" />
+    <Compile Include="PrintOut\BanquetPrintOut.cs" />
+    <Compile Include="PrintOut\BanquetPrintOut.Designer.cs" />
+    <Compile Include="PrintOut\EventFolioPrintOut.cs" />
+    <Compile Include="PrintOut\EventFolioPrintOut.Designer.cs" />
+    <Compile Include="PrintOut\EventPrint.cs" />
+    <Compile Include="PrintOut\EventPrint.Designer.cs" />
+    <Compile Include="PrintOut\BanquetPrint.cs" />
+    <Compile Include="PrintOut\BanquetPrint.Designer.cs" />
+    <Compile Include="PrintOut\ProformaPrintout.cs" />
+    <Compile Include="PrintOut\ProformaPrintout.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Modals\EventDetailForm.resx" />
+    <EmbeddedResource Include="Modals\EventEditor.resx" />
+    <EmbeddedResource Include="Modals\EventFolio.resx" />
+    <EmbeddedResource Include="Modals\frmCashReceipt.resx" />
+    <EmbeddedResource Include="Modals\frmFrontOfficePOS.resx" />
+    <EmbeddedResource Include="Modals\EventRequirement.resx" />
+    <EmbeddedResource Include="Modals\frmNonCashPayments.resx" />
+    <EmbeddedResource Include="Modals\UIMaintainCustomer.resx" />
+    <EmbeddedResource Include="PrintOut\BanquetPrintOut.resx" />
+    <EmbeddedResource Include="PrintOut\EventFolioPrintOut.cs.resx" />
+    <EmbeddedResource Include="PrintOut\EventFolioPrintOut.resx" />
+    <EmbeddedResource Include="PrintOut\EventPrint.resx" />
+    <EmbeddedResource Include="PrintOut\BanquetPrint.resx" />
+    <EmbeddedResource Include="PrintOut\ProformaPrintout.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevExpress.Win.Design" Version="21.2.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\CNET.API.Manager\API.Manager.csproj" />
+    <ProjectReference Include="..\..\..\CNET.FP.Tool\FP.Tool.csproj" />
+    <ProjectReference Include="..\..\DocumentPrint\DocumentPrint.csproj" />
+    <ProjectReference Include="..\..\LocalBuffer\LocalBuffer.csproj" />
+    <ProjectReference Include="..\..\ProcessManager\ProcessManager.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="CNET.Progress.Reporter">
+      <HintPath>..\..\CNET.FrontOffice V.7\bin\Debug\net6.0-windows\CNET.Progress.Reporter.dll</HintPath>
+    </Reference>
+    <Reference Include="CNET_V7_Domain">
+      <HintPath>..\..\..\..\..\..\..\CNET_V7_Domain\CNET_V7_Domain.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

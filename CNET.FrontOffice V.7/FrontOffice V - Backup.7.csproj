@@ -1,0 +1,337 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <RootNamespace>CNET.FrontOffice_V._7</RootNamespace>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>RED logo png-08.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="APICommunication\**" />
+    <Compile Remove="InfoReporter\**" />
+    <Compile Remove="LocalBuffer\**" />
+    <Compile Remove="Logics\**" />
+    <Compile Remove="PMS\Forms\HouseKeeping\**" />
+    <Compile Remove="PMS\Forms\Journalization\**" />
+    <Compile Remove="PMS\Forms\Night Audit\New folder\**" />
+    <Compile Remove="PMS\Forms\Non Navigatable Modals\**" />
+    <Compile Remove="PMS\Forms\Temp\**" />
+    <Compile Remove="PMS\Forms\Utilities\**" />
+    <EmbeddedResource Remove="APICommunication\**" />
+    <EmbeddedResource Remove="InfoReporter\**" />
+    <EmbeddedResource Remove="LocalBuffer\**" />
+    <EmbeddedResource Remove="Logics\**" />
+    <EmbeddedResource Remove="PMS\Forms\HouseKeeping\**" />
+    <EmbeddedResource Remove="PMS\Forms\Journalization\**" />
+    <EmbeddedResource Remove="PMS\Forms\Night Audit\New folder\**" />
+    <EmbeddedResource Remove="PMS\Forms\Non Navigatable Modals\**" />
+    <EmbeddedResource Remove="PMS\Forms\Temp\**" />
+    <EmbeddedResource Remove="PMS\Forms\Utilities\**" />
+    <None Remove="APICommunication\**" />
+    <None Remove="InfoReporter\**" />
+    <None Remove="LocalBuffer\**" />
+    <None Remove="Logics\**" />
+    <None Remove="PMS\Forms\HouseKeeping\**" />
+    <None Remove="PMS\Forms\Journalization\**" />
+    <None Remove="PMS\Forms\Night Audit\New folder\**" />
+    <None Remove="PMS\Forms\Non Navigatable Modals\**" />
+    <None Remove="PMS\Forms\Temp\**" />
+    <None Remove="PMS\Forms\Utilities\**" />
+    <Page Remove="APICommunication\**" />
+    <Page Remove="InfoReporter\**" />
+    <Page Remove="LocalBuffer\**" />
+    <Page Remove="Logics\**" />
+    <Page Remove="PMS\Forms\HouseKeeping\**" />
+    <Page Remove="PMS\Forms\Journalization\**" />
+    <Page Remove="PMS\Forms\Night Audit\New folder\**" />
+    <Page Remove="PMS\Forms\Non Navigatable Modals\**" />
+    <Page Remove="PMS\Forms\Temp\**" />
+    <Page Remove="PMS\Forms\Utilities\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Document Browser\ConsigneeDocument.cs" />
+    <Compile Remove="Document Browser\ConsigneeDocument.Designer.cs" />
+    <Compile Remove="Document Browser\VoucherDocument.cs" />
+    <Compile Remove="Document Browser\VoucherDocument.Designer.cs" />
+    <Compile Remove="PMSReport\Class\PMSReportLists.cs" />
+    <Compile Remove="PMSReport\Class\PoliceReportAPIInterface.cs" />
+    <Compile Remove="PMSReport\Class\ReportHelper.cs" />
+    <Compile Remove="PMS\DoorLockIntegration\DoorLock\DIGI.cs" />
+    <Compile Remove="PMS\DoorLockIntegration\DoorLock\Syron.cs" />
+    <Compile Remove="PMS\DTO\AddressDTO.cs" />
+    <Compile Remove="PMS\DTO\ConsigneeVM.cs" />
+    <Compile Remove="PMS\DTO\LineItemDetailVM.cs" />
+    <Compile Remove="PMS\DTO\RegistrationDocumentVM.cs" />
+    <Compile Remove="PMS\DTO\RegistrationListVM.cs" />
+    <Compile Remove="PMS\DTO\ValidationInfo.cs" />
+    <Compile Remove="PMS\Forms\Group Registration\frmGeneralGroupReg.cs" />
+    <Compile Remove="PMS\Forms\Group Registration\frmGeneralGroupReg.Designer.cs" />
+    <Compile Remove="PMS\Forms\Pinned Tabs\frmEventManagment.cs" />
+    <Compile Remove="PMS\Forms\Pinned Tabs\frmEventManagment.Designer.cs" />
+    <Compile Remove="PMS\Forms\Pinned Tabs\frmLicenseForm.cs" />
+    <Compile Remove="PMS\Forms\Pinned Tabs\frmLicenseForm.Designer.cs" />
+    <Compile Remove="PMS\Forms\Setting and Miscellaneous\frmSetting.cs" />
+    <Compile Remove="PMS\Forms\Setting and Miscellaneous\frmSetting.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Document Browser\ConsigneeDocument.resx" />
+    <EmbeddedResource Remove="Document Browser\VoucherDocument.resx" />
+    <EmbeddedResource Remove="PMS\Forms\Group Registration\frmGeneralGroupReg.resx" />
+    <EmbeddedResource Remove="PMS\Forms\Pinned Tabs\frmEventManagment.resx" />
+    <EmbeddedResource Remove="PMS\Forms\Pinned Tabs\frmLicenseForm.resx" />
+    <EmbeddedResource Remove="PMS\Forms\Setting and Miscellaneous\frmSetting.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="PMS\Forms\HouseKeeping\frmAddEmployee.cs" />
+    <Compile Include="PMS\Forms\HouseKeeping\frmAddEmployee.Designer.cs" />
+    <Compile Include="PMS\Forms\HouseKeeping\frmDescripancy.cs" />
+    <Compile Include="PMS\Forms\HouseKeeping\frmDescripancy.Designer.cs" />
+    <Compile Include="PMS\Forms\HouseKeeping\frmDiscrpancyDialog.cs" />
+    <Compile Include="PMS\Forms\HouseKeeping\frmDiscrpancyDialog.Designer.cs" />
+    <Compile Include="PMS\Forms\HouseKeeping\frmHouseKeepingMgmt.cs" />
+    <Compile Include="PMS\Forms\HouseKeeping\frmHouseKeepingMgmt.Designer.cs" />
+    <Compile Include="PMS\Forms\HouseKeeping\frmTaskAssignment.cs" />
+    <Compile Include="PMS\Forms\HouseKeeping\frmTaskAssignment.Designer.cs" />
+    <Compile Include="PMS\Forms\HouseKeeping\frmTaskSheetDetails.cs" />
+    <Compile Include="PMS\Forms\HouseKeeping\frmTaskSheetDetails.Designer.cs" />
+    <Compile Include="PMS\Forms\HouseKeeping\frmTaskSheetGrid.cs" />
+    <Compile Include="PMS\Forms\HouseKeeping\frmTaskSheetGrid.Designer.cs" />
+    <Compile Include="PMS\Forms\HouseKeeping\frmTurndwnMgmt.cs" />
+    <Compile Include="PMS\Forms\HouseKeeping\frmTurndwnMgmt.Designer.cs" />
+    <Compile Include="PMS\Forms\HouseKeeping\HouseKeepingReport.cs" />
+    <Compile Include="PMS\Forms\HouseKeeping\HouseKeepingReport.Designer.cs" />
+    <Compile Include="PMS\Forms\HouseKeeping\TaskAssignmentReport.cs" />
+    <Compile Include="PMS\Forms\HouseKeeping\TaskAssignmentReport.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmAccompanyingGuest.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmAccompanyingGuest.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmDailyDetail.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmDailyDetail.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmDailyRateDetail.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmDailyRateDetail.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmDateAmendment.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmDateAmendment.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmDisplay.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmDisplay.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmDoorLock.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmDoorLock.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmFolio.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmFolio.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmLogBillTransfer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmLogBillTransfer.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmLostAndFound.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmLostAndFound.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmManualCharge.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmManualCharge.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmMessaging.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmMessaging.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmMultipleRoomCheckIn.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmMultipleRoomCheckIn.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmNonCashPayments.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmNonCashPayments.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmNote.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmNote.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmOtherFields.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmOtherFields.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmPaymentOptions.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmPaymentOptions.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmProfileAmendment.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmProfileAmendment.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmProformaFolio.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmProformaFolio.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRateAdjustmnet.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRateAdjustmnet.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRateDetail.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRateDetail.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRateDetailInfo.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRateDetailInfo.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRatePackagePrint.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRatePackagePrint.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRateSearch.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRateSearch.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRateSummery.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRateSummery.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmReconciliation.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmReconciliation.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRegistrationDateAmendement.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRegistrationDateAmendement.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRegistrationDetail.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRegistrationDetail.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRegistrationPrivileges.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRegistrationPrivileges.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRoomCharge.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRoomCharge.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRoomMove.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRoomMove.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRoomPosCharge.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRoomPosCharge.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRoomSearch.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRoomSearch.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRouteEdit.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmRouteEdit.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmServiceRequest.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmServiceRequest.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmSplitBills.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmSplitBills.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmSplitItem.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmSplitItem.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmSubCountry.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmSubCountry.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmTransferPosCharge.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmTransferPosCharge.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmTravelDetail.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmTravelDetail.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmWakeupCall.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmWakeupCall.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\GuestFolio.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\GuestFolio.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\PackagePrintout.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\PackagePrintout.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="RED logo png-08.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="PMS\Forms\HouseKeeping\frmAddEmployee.resx" />
+    <EmbeddedResource Include="PMS\Forms\HouseKeeping\frmDescripancy.resx" />
+    <EmbeddedResource Include="PMS\Forms\HouseKeeping\frmDiscrpancyDialog.resx" />
+    <EmbeddedResource Include="PMS\Forms\HouseKeeping\frmHouseKeepingMgmt.resx" />
+    <EmbeddedResource Include="PMS\Forms\HouseKeeping\frmTaskAssignment.resx" />
+    <EmbeddedResource Include="PMS\Forms\HouseKeeping\frmTaskSheetDetails.resx" />
+    <EmbeddedResource Include="PMS\Forms\HouseKeeping\frmTaskSheetGrid.resx" />
+    <EmbeddedResource Include="PMS\Forms\HouseKeeping\frmTurndwnMgmt.resx" />
+    <EmbeddedResource Include="PMS\Forms\HouseKeeping\HouseKeepingReport.resx" />
+    <EmbeddedResource Include="PMS\Forms\HouseKeeping\TaskAssignmentReport.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmAccompanyingGuest.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmDailyDetail.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmDailyRateDetail.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmDateAmendment.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmDisplay.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmDoorLock.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmFolio.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmLogBillTransfer.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmLostAndFound.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmManualCharge.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmMessaging.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmMultipleRoomCheckIn.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmNonCashPayments.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmNote.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmOtherFields.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmPaymentOptions.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmProfileAmendment.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmProformaFolio.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmRateAdjustmnet.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmRateDetail.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmRateDetailInfo.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmRatePackagePrint.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmRateSearch.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmRateSummery.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmReconciliation.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmRegistrationDateAmendement.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmRegistrationDetail.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmRegistrationPrivileges.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmRoomCharge.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmRoomMove.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmRoomPosCharge.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmRoomSearch.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmRouteEdit.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmServiceRequest.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmSplitBills.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmSplitItem.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmSubCountry.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmTransferPosCharge.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmTravelDetail.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmWakeupCall.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\GuestFolio.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\PackagePrintout.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevExpress.Win.Design" Version="21.2.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ImageProvider\" />
+    <Folder Include="PMSReport\Class\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CNET.API.Manager\API.Manager.csproj" />
+    <ProjectReference Include="..\..\CNET.FP.Tool\FP.Tool.csproj" />
+    <ProjectReference Include="..\..\CNET.POS.FiscalPrinter\CNET.POS.FiscalPrinter.csproj" />
+    <ProjectReference Include="..\..\ScribbleWinTab\ScribbleWinTab\ScribbleWinTab.csproj" />
+    <ProjectReference Include="..\..\V7PassportOCR\V7PassportOCR\V7PassportOCR.csproj" />
+    <ProjectReference Include="..\DocumentPrint\DocumentPrint.csproj" />
+    <ProjectReference Include="..\LocalBuffer\LocalBuffer.LocalBuffer.csproj" />
+    <ProjectReference Include="..\ProcessManager\ProcessManager.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Accord">
+      <HintPath>..\..\V7PassportOCR\packages\Accord.dll</HintPath>
+    </Reference>
+    <Reference Include="Accord.Imaging">
+      <HintPath>..\..\V7PassportOCR\packages\Accord.Imaging.dll</HintPath>
+    </Reference>
+    <Reference Include="AxInterop.WMPLib">
+      <HintPath>..\..\..\..\..\..\CNET_V7_Domain\AxInterop.WMPLib.dll</HintPath>
+    </Reference>
+    <Reference Include="CNET.Progress.Reporter">
+      <HintPath>..\..\POS\CNET.Progress.Reporter.dll</HintPath>
+    </Reference>
+    <Reference Include="CNET_V7_Domain">
+      <HintPath>..\..\..\..\..\..\CNET_V7_Domain\CNET_V7_Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.WIA">
+      <HintPath>..\..\V7PassportOCR\packages\Interop.WIA.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.WMPLib">
+      <HintPath>..\..\..\..\..\..\CNET_V7_Domain\Interop.WMPLib.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\..\..\..\..\CNET_V7_Domain\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel">
+      <HintPath>..\..\..\..\..\..\CNET_V7_Domain\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic.PowerPacks">
+      <HintPath>..\..\..\..\..\..\CNET_V7_Domain\Microsoft.VisualBasic.PowerPacks.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenCvSharp">
+      <HintPath>..\..\V7PassportOCR\packages\OpenCvSharp3-AnyCPU.3.3.1.20171117\lib\net40\OpenCvSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenCvSharp.Blob">
+      <HintPath>..\..\V7PassportOCR\packages\OpenCvSharp3-AnyCPU.3.3.1.20171117\lib\net40\OpenCvSharp.Blob.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenCvSharp.Extensions">
+      <HintPath>..\..\V7PassportOCR\packages\OpenCvSharp3-AnyCPU.3.3.1.20171117\lib\net40\OpenCvSharp.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenCvSharp.UserInterface">
+      <HintPath>..\..\V7PassportOCR\packages\OpenCvSharp3-AnyCPU.3.3.1.20171117\lib\net40\OpenCvSharp.UserInterface.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

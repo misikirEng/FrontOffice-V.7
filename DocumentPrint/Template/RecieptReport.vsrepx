@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XtraReportsLayoutSerializer SerializerVersion="21.2.6.0" Ref="0" ControlType="DevExpress.XtraReports.UI.XtraReport, DevExpress.XtraReports.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" Name="RecieptReport" Margins="36, 25, 16, 1" PageWidth="850" PageHeight="1100" Version="21.2" Font="Arial, 9.75pt">
+  <Extensions>
+    <Item1 Ref="1" Key="VSReportExtInfo" Value=".vsrepx" />
+  </Extensions>
+  <Bands>
+    <Item1 Ref="2" ControlType="TopMarginBand" Name="TopMargin" HeightF="15.625" />
+    <Item2 Ref="3" ControlType="BottomMarginBand" Name="BottomMargin" HeightF="1" />
+    <Item3 Ref="4" ControlType="DetailBand" Name="Detail" HeightF="99.95836">
+      <Controls>
+        <Item1 Ref="5" ControlType="XRSubreport" Name="subreport2" SizeF="789.000061,23.0000038" LocationFloat="0,53.0833244" />
+        <Item2 Ref="6" ControlType="XRSubreport" Name="subreport1" SizeF="787,23" LocationFloat="0,10.0000067" />
+      </Controls>
+    </Item3>
+    <Item4 Ref="7" ControlType="PageFooterBand" Name="PageFooter" HeightF="11.5832644" />
+  </Bands>
+</XtraReportsLayoutSerializer>

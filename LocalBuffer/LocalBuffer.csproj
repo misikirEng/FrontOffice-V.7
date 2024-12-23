@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Calculators\**" />
+    <EmbeddedResource Remove="Calculators\**" />
+    <None Remove="Calculators\**" />
+    <Page Remove="Calculators\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Form1.cs" />
+    <Compile Remove="Form1.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Form1.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CNET.API.Manager\API.Manager.csproj" />
+    <ProjectReference Include="..\FTPInterface\FTPInterface.csproj" />
+    <ProjectReference Include="..\ProcessManager\ProcessManager.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="CNET.Progress.Reporter">
+      <HintPath>..\..\..\..\..\..\CNET_V7_Domain\CNET.Progress.Reporter.dll</HintPath>
+    </Reference>
+    <Reference Include="CNET_V7_Domain">
+      <HintPath>..\..\..\..\..\..\CNET_V7_Domain\CNET_V7_Domain.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
