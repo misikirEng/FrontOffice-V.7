@@ -21,7 +21,7 @@ namespace CNETImageEditor
         public CNET_Image_Editor()
         {
             Application.EnableVisualStyles();
-            BonusSkins.Register();
+         
             SkinManager.EnableFormSkins();
             UserLookAndFeel.Default.SetSkinStyle("Metropolis");
             

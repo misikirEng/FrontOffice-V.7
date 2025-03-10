@@ -511,8 +511,14 @@ namespace CNET.FrontOffice_V._7
             //         }) { IsBackground = true };
             //    HRMSPlacementNotificationThread.Start();
             //}
-             //GetLicenseData();
 
+
+           /* //For License Repot Purpose
+            xtabCalender.PageEnabled = true;
+            xtabCalender.Visible = true;
+            xtabCalender.PageVisible = true;
+            GetLicenseData();
+           */
         }
         public void GetLicenseData()
         {
@@ -692,7 +698,7 @@ namespace CNET.FrontOffice_V._7
             bool successfullyTracked = false;
             if (LocalBuffer.LocalBuffer.ConfigurationBufferList == null)
                 return;
-            ConfigurationDTO mConfigurationPsExpi = LocalBuffer.LocalBuffer.ConfigurationBufferList.Where(l => l.Attribute.ToLower() == "minimum password length ").FirstOrDefault();
+            ConfigurationDTO mConfigurationPsExpi = LocalBuffer.LocalBuffer.ConfigurationBufferList.Where(l => l.Attribute.ToLower() == "minimum password length").FirstOrDefault();
             status = false;
             if (mConfigurationPsExpi != null)
             {

@@ -43,7 +43,8 @@ namespace CNET.ERP.Client.UI_Logic.PMS.Forms.CommonClass
                 VoucherDTO voucher = new VoucherDTO();
                 lineItemDetails = new List<LineItemDetails>();
                 //voucher.Id = sourceVoucherBuffer.Voucher.Id;
-                voucher.Code = currentVoCode; 
+                voucher.Code = currentVoCode;
+                voucher.OriginConsigneeUnit = sourceVoucherBuffer.Voucher.OriginConsigneeUnit;
                 voucher.Consignee1 = sourceVoucherBuffer.Voucher.Consignee1;
                 voucher.IssuedDate = sourceVoucherBuffer.Voucher.IssuedDate;
                 voucher.Year = sourceVoucherBuffer.Voucher.Year;
@@ -51,6 +52,8 @@ namespace CNET.ERP.Client.UI_Logic.PMS.Forms.CommonClass
                 voucher.Month = sourceVoucherBuffer.Voucher.Month;
                 voucher.Type = sourceVoucherBuffer.Voucher.Type;
                 voucher.Definition = sourceVoucherBuffer.Voucher.Definition;
+                voucher.LastUser = LocalBuffer.LocalBuffer.CurrentLoggedInUser.Id;
+                voucher.LastDevice = LocalBuffer.LocalBuffer.CurrentDevice.Id;
                 voucher.LastState = sourceVoucherBuffer.Voucher.LastState;
                 voucher.LastActivity = sourceVoucherBuffer.Voucher.LastActivity;
                 voucher.IsVoid = sourceVoucherBuffer.Voucher.IsVoid;

@@ -61,6 +61,7 @@
             this.tableCell13 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrPictureBox1 = new DevExpress.XtraReports.UI.XRPictureBox();
             this.GroupHeader1 = new DevExpress.XtraReports.UI.GroupHeaderBand();
+            this.lblFSNo = new DevExpress.XtraReports.UI.XRLabel();
             this.xrRefTable = new DevExpress.XtraReports.UI.XRTable();
             this.xrTableRow1 = new DevExpress.XtraReports.UI.XRTableRow();
             this.xrTableCell1 = new DevExpress.XtraReports.UI.XRTableCell();
@@ -510,6 +511,7 @@
             // GroupHeader1
             // 
             this.GroupHeader1.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
+            this.lblFSNo,
             this.xrRefTable,
             this.table10,
             this.netPaymentTbl,
@@ -520,8 +522,20 @@
             this.consTbl,
             this.refTbl,
             this.payementMethodTbl});
-            this.GroupHeader1.HeightF = 216.4584F;
+            this.GroupHeader1.HeightF = 217.5834F;
             this.GroupHeader1.Name = "GroupHeader1";
+            // 
+            // lblFSNo
+            // 
+            this.lblFSNo.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Underline);
+            this.lblFSNo.LocationFloat = new DevExpress.Utils.PointFloat(430.168F, 167.0245F);
+            this.lblFSNo.Multiline = true;
+            this.lblFSNo.Name = "lblFSNo";
+            this.lblFSNo.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.lblFSNo.SizeF = new System.Drawing.SizeF(330.7069F, 23.71182F);
+            this.lblFSNo.StylePriority.UseFont = false;
+            this.lblFSNo.StylePriority.UseTextAlignment = false;
+            this.lblFSNo.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
             // 
             // xrRefTable
             // 
@@ -951,7 +965,7 @@
             this.refTbl.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 96F);
             this.refTbl.Rows.AddRange(new DevExpress.XtraReports.UI.XRTableRow[] {
             this.tableRow1});
-            this.refTbl.SizeF = new System.Drawing.SizeF(759.6255F, 23.71184F);
+            this.refTbl.SizeF = new System.Drawing.SizeF(428.9186F, 23.71184F);
             // 
             // tableRow1
             // 
@@ -988,7 +1002,7 @@
             this.tableCell5.StylePriority.UseFont = false;
             this.tableCell5.StylePriority.UseTextAlignment = false;
             this.tableCell5.TextAlignment = DevExpress.XtraPrinting.TextAlignment.BottomLeft;
-            this.tableCell5.Weight = 1.5271184157241136D;
+            this.tableCell5.Weight = 0.68609773019219711D;
             // 
             // payementMethodTbl
             // 
@@ -1191,5 +1205,6 @@
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow2;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell3;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell4;
+        private DevExpress.XtraReports.UI.XRLabel lblFSNo;
     }
 }

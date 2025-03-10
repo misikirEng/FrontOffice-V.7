@@ -5,14 +5,10 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Windows.Forms;
-using CNET.ERP.Client.Common.UI;
-using CNET.ERP2016.SQLDataAccess;
+using System.Windows.Forms; 
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
-using DevExpress.XtraRichEdit;
-using CNET.Client.Common;
-using CNETAttachment;
+using DevExpress.XtraRichEdit;  
 using DevExpress.XtraPrinting.Native;
 using CNETCamera;
 using CNETDocumentScanner;
@@ -21,172 +17,232 @@ using AxWMPLib;
 using System.Drawing.Drawing2D;
 using DevExpress.XtraEditors.Controls;
 using CNET_ImageEditor;
+using CNET_V7_Domain.Domain.CommonSchema;
+using CNET_V7_Domain.Domain.SettingSchema;
+using CNET.Progress.Reporter;
+using ProcessManager;
+using DevExpress.Mvvm.Native;
 
 namespace ERP.Attachement
 {
     public partial class modalNewAttachment : XtraForm
     {
         private const int CP_NOCLOSE_BUTTON = 0x200;
-        private Attachment attachmentObj = new Attachment();
+        private AttachmentDTO attachmentObj = new AttachmentDTO();
         private byte[] byteData;
         private string extension;
         private string fileName;
         public static Image acquiredImage = null;
         public static Image imm { get; set; }
         ScannerMain scaner = null;
-        Configuration attchmentSaveValue = null;
+        ConfigurationDTO attchmentSaveValue = null;
         private bool voucherFlag = false;
-        private string attReference = "";
-        public Attachment savedAttachment = null;
-        private string catagory = null;
-        private List<Attachment> temporaryAttachments = new List<Attachment>();
+        private int? attReference = null;
+        public AttachmentDTO savedAttachment = null;
+        private int? catagory = null;
+        private List<AttachmentDTO> temporaryAttachments = new List<AttachmentDTO>();
         CameraMain cameraMain = new CameraMain();
         string TypeName { get; set; }
-        string DefaultAttachmentPath { get; set; }
+        int TypeId { get; set; }
+        //string DefaultAttachmentPath { get; set; }
 
-        public bool AttachmentIsFTP { get; set; }
+        //public bool AttachmentIsFTP { get; set; }
         public string AttachmentIsFTPTINNo { get; set; }
         public string AttachmentIsFTPOrganizationUnitDef { get; set; }
-        public bool AttachmentIsFTPRoom { get; set; }
-        public string AttachmentFTPRoomType { get; set; }
+        //public bool AttachmentIsFTPRoom { get; set; }
+        //public string AttachmentFTPRoomType { get; set; }
+
+        bool CompanyFTPExist { get; set; }
         public modalNewAttachment()
         {
             InitializeComponent();
+            CompanyFTPExist = FTPInterface.FTPAttachment.InitalizeFTPAttachment(LocalBuffer.LocalBuffer.CompanyConsigneeData.Tin);
+            if (!CompanyFTPExist)
+            {
+                XtraMessageBox.Show("Company FTP Path not available !!", "FTP Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
         }
 
 
-        public modalNewAttachment(string attachmentCatagory, int type, bool IsFTP = false)
+        public modalNewAttachment(int id, bool isVoucher, int attachmentCatagory, int type)
         {
             InitializeComponent();
 
-            catagory = attachmentCatagory;
+            CompanyFTPExist = FTPInterface.FTPAttachment.InitalizeFTPAttachment(LocalBuffer.LocalBuffer.CompanyConsigneeData.Tin);
+            if (!CompanyFTPExist)
+            {
+                XtraMessageBox.Show("Company FTP Path not available !!", "FTP Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
-            VoucherDefinition vou = LoginPage.Authentication.VoucherDefinitionBufferList.FirstOrDefault(x => x.code == type);
+            voucherFlag = isVoucher;
+            attReference = id;
+            catagory = attachmentCatagory;
+            TypeId = type;
+            SystemConstantDTO vou = LocalBuffer.LocalBuffer.SystemConstantDTOBufferList.FirstOrDefault(x => x.Id == type);
             if (vou != null)
             {
-                TypeName = vou.systemName;
+                TypeName = vou.Description;
 
             }
             else
             {
-                GSLTypeList gsltype = LoginPage.Authentication.GSLTypeListBufferList.FirstOrDefault(x => x.code == type);
-                if (gsltype != null)
-                {
-                    TypeName = gsltype.description;
-                }
-                else
-                {
-                    XtraMessageBox.Show("Improper Type !", "CNET Attachment");
-                    TypeName = "Others\\";
-                    return;
-                }
+                //SystemConstantDTO gsltype = LocalBuffer.LocalBuffer.SystemConstantDTOBufferList.FirstOrDefault(x => x.Id == type);
+                //if (gsltype != null)
+                //{
+                //    TypeName = gsltype.Description;
+                //}
+                //else
+                //{
+                XtraMessageBox.Show("Improper Type !", "ERP Attachment");
+                TypeName = "Others\\";
+                return;
+                //}
             }
-            if (!IsFTP)
-            {
-                bool checkpath = GetAttachmentPath();
+            //if (!IsFTP)
+            //{
+            //    bool checkpath = GetAttachmentPath();
 
-                if (!checkpath)
-                {
-                    return;
-                }
+            //    if (!checkpath)
+            //    {
+            //        return;
+            //    }
 
-            }
+            //}
 
         }
 
-        private bool GetAttachmentPath()
-        {
-            bool good = false;
-            Device FileStorageDevice = LoginPage.Authentication.DeviceBufferList.FirstOrDefault(x => x.preference == CNETConstantes.FileServer);
-            if (FileStorageDevice != null)
-            {
-                if (LoginPage.Authentication.ConfigurationBufferList == null)
-                {
-                    CNETInfoReporter.Hide();
-                    XtraMessageBox.Show("Please Select Default Attachment Path for File Storage Device!", "CNET Attachment");
-                    return false;
-                }
-                Configuration value = LoginPage.Authentication.ConfigurationBufferList.FirstOrDefault(x => x.reference == FileStorageDevice.code && x.attribute == "Default Attachment Path");
-                if (value == null)
-                {
-                    CNETInfoReporter.Hide();
-                    XtraMessageBox.Show("Please Select Default Attachment Path for File Storage Device!", "CNET Attachment");
-                    return false;
-                }
+        //private bool GetAttachmentPath()
+        //{
+        //    bool good = false;
+             
+        //    DefaultAttachmentPath = Environment.ProcessPath + "\\" + TypeName;
+        //    try
+        //    {
+        //        if (!Directory.Exists(DefaultAttachmentPath))
+        //        {
+        //            Directory.CreateDirectory(DefaultAttachmentPath);
+        //        }
+        //        if (!Directory.Exists(DefaultAttachmentPath))
+        //        {
+        //            XtraMessageBox.Show("Please Select Default Attachment Path for File Storage Device!", "ERP Attachment");
+        //            return false;
+        //        }
+        //    }
+        //    catch
+        //    {
+        //        XtraMessageBox.Show("Please Select Proper Default Attachment Path for File Storage Device!", "ERP Attachment");
+        //        return false;
+        //    }
+        //    good = true;
 
-                DefaultAttachmentPath = value.currentValue+"\\"+TypeName;
-                try
-                {
-                    if (!Directory.Exists(DefaultAttachmentPath))
-                    {
-                        Directory.CreateDirectory(DefaultAttachmentPath);
-                    }
-                    if (!Directory.Exists(DefaultAttachmentPath))
-                    {
-                        XtraMessageBox.Show("Please Select Default Attachment Path for File Storage Device!", "CNET Attachment");
-                        return false;
-                    }
-                }
-                catch
-                {
-                    XtraMessageBox.Show("Please Select Proper Default Attachment Path for File Storage Device!", "CNET Attachment");
-                    return false;
-                }
-                good = true;
-            }
-            else
-            {
-                DefaultAttachmentPath = "";
-                CNETInfoReporter.Hide();
-                XtraMessageBox.Show("Please Maintain File Storage Device and Set Default Attachment Path !", "CNET Attachment");
-                return false;
-            }
-            return good;
-        }
+
+
+
+
+
+
+
+
+        //    //DeviceDTO FileStorageDevice = LoginPage.Authentication.DeviceBufferList.FirstOrDefault(x => x.preference == CNETConstantes.FileServer);
+        //    //if (FileStorageDevice != null)
+        //    //{
+        //    //    if (LoginPage.Authentication.ConfigurationBufferList == null)
+        //    //    {
+        //    //       Progress_Reporter.Close_Progress();
+        //    //        XtraMessageBox.Show("Please Select Default Attachment Path for File Storage Device!", "ERP Attachment");
+        //    //        return false;
+        //    //    }
+        //    //    Configuration value = LoginPage.Authentication.ConfigurationBufferList.FirstOrDefault(x => x.reference == FileStorageDevice.code && x.attribute == "Default Attachment Path");
+        //    //    if (value == null)
+        //    //    {
+        //    //       Progress_Reporter.Close_Progress();
+        //    //        XtraMessageBox.Show("Please Select Default Attachment Path for File Storage Device!", "ERP Attachment");
+        //    //        return false;
+        //    //    }
+
+        //    //    DefaultAttachmentPath = value.currentValue+"\\"+TypeName;
+        //    //    try
+        //    //    {
+        //    //        if (!Directory.Exists(DefaultAttachmentPath))
+        //    //        {
+        //    //            Directory.CreateDirectory(DefaultAttachmentPath);
+        //    //        }
+        //    //        if (!Directory.Exists(DefaultAttachmentPath))
+        //    //        {
+        //    //            XtraMessageBox.Show("Please Select Default Attachment Path for File Storage Device!", "ERP Attachment");
+        //    //            return false;
+        //    //        }
+        //    //    }
+        //    //    catch
+        //    //    {
+        //    //        XtraMessageBox.Show("Please Select Proper Default Attachment Path for File Storage Device!", "ERP Attachment");
+        //    //        return false;
+        //    //    }
+        //    //    good = true;
+        //    //}
+        //    //else
+        //    //{
+        //    //    DefaultAttachmentPath = "";
+        //    //   Progress_Reporter.Close_Progress();
+        //    //    XtraMessageBox.Show("Please Maintain File Storage Device and Set Default Attachment Path !", "ERP Attachment");
+        //    //    return false;
+        //    //}
+        //    return good;
+        //}
 
         /// <summary>
         /// FOR VOUCHER ATTACHMENT
         /// </summary>
         /// <param name="code"></param>
         /// <param name="isVoucher"></param>
-        public modalNewAttachment(string code, bool isVoucher, string attachmentCatagory, List<Attachment> previousAttachment, int type, bool IsFTP = false)
+        public modalNewAttachment(int? id, bool isVoucher, int attachmentCatagory, List<AttachmentDTO> previousAttachment, int type, bool IsFTP = true)
         {
-            InitializeComponent();
+            InitializeComponent(); 
+            
+            CompanyFTPExist = FTPInterface.FTPAttachment.InitalizeFTPAttachment(LocalBuffer.LocalBuffer.CompanyConsigneeData.Tin);
+            if (!CompanyFTPExist)
+            {
+                XtraMessageBox.Show("Company FTP Path not available !!", "FTP Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             voucherFlag = isVoucher;
-            attReference = code;
+            attReference = id;
             catagory = attachmentCatagory;
             temporaryAttachments = previousAttachment;
 
-            VoucherDefinition vou = LoginPage.Authentication.VoucherDefinitionBufferList.FirstOrDefault(x => x.code == type);
+            SystemConstantDTO vou = LocalBuffer.LocalBuffer.SystemConstantDTOBufferList.FirstOrDefault(x => x.Id == type);
             if (vou != null)
             {
-                TypeName = vou.systemName;
+                TypeName = vou.Description;
 
             }
             else
             {
-                GSLTypeList gsltype = LoginPage.Authentication.GSLTypeListBufferList.FirstOrDefault(x => x.code == type);
-                if (gsltype != null)
-                {
-                    TypeName = gsltype.description;
-                }
-                else
-                {
-                   // XtraMessageBox.Show("Improper Voucher Definition or GSL Type !", "CNET Attachment");
+                //GSLTypeList gsltype = LoginPage.Authentication.GSLTypeListBufferList.FirstOrDefault(x => x.code == type);
+                //if (gsltype != null)
+                //{
+                //    TypeName = gsltype.description;
+                //}
+                //else
+                //{
+                   // XtraMessageBox.Show("Improper Voucher Definition or GSL Type !", "ERP Attachment");
                     TypeName = "Others\\";
                     return;
-                }
+                //}
             }
-            if (!IsFTP)
-            {
-                bool checkpath = GetAttachmentPath();
+            //if (!IsFTP)
+            //{
+            //    bool checkpath = GetAttachmentPath();
 
-                if (!checkpath)
-                {
-                    return;
-                }
+            //    if (!checkpath)
+            //    {
+            //        return;
+            //    }
 
-            }
+            //}
         }
 
         protected override CreateParams CreateParams
@@ -206,7 +262,7 @@ namespace ERP.Attachement
             pdfViewer1.Visible = false;
             spreadsheetControl1.Visible = false;
             axWindowsMediaPlayer1.Visible = false;
-            if (LoginPage.Authentication.ConfigurationBufferList == null)
+            if (LocalBuffer.LocalBuffer.ConfigurationBufferList == null)
                 return;
            /*List<Configuration> value = LoginPage.Authentication.ConfigurationBufferList.Where(x => x.reference == CNETConstantes.CNET_ERP2016).ToList();
             if (value == null || value.Count == 0)
@@ -242,8 +298,7 @@ namespace ERP.Attachement
             bbiScanDocumnet.Visible = false;
             cbDevices.Visible = false;
             cbScannerDevices.Visible = false;
-            txtUrl.Visible = true;
-            label1.Text = "Url";
+            txtUrl.Visible =true; 
             pcPreview.Controls.Add(pictureEdit1);
             pcPreview.Controls.Add(richEditControl1);
             pcPreview.Controls.Add(pdfViewer1);
@@ -363,14 +418,14 @@ namespace ERP.Attachement
                     pdfViewer1.Visible = false;
                     spreadsheetControl1.Visible = false;
                     axWindowsMediaPlayer1.Visible = false;
-                    pictureEdit1.Image = CNETAttachment.Properties.Resources.nopreview;
+                    //pictureEdit1.Image = ERP.Attachement.Properties.Resources.nopreview;
                 }
 
             }
             catch (Exception ex)
             {
 
-                XtraMessageBox.Show(ex.Message, "CNET Attachment");
+                XtraMessageBox.Show(ex.Message, "ERP Attachment");
             }
         }
 
@@ -384,225 +439,251 @@ namespace ERP.Attachement
         }
         public void bbiSave_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (voucherFlag)
+            //if (voucherFlag)
+            //{
+            //    if (string.IsNullOrEmpty(txtDescription.Text.ToString()))
+            //    {
+            //        Progress_Reporter.Close_Progress();
+            //        XtraMessageBox.Show("Please Enter Description", "ERP Attachment");
+            //        return;
+            //    }
+            //    savedAttachment = saveAndReturnAttachment(attReference.Value);
+            //    if (savedAttachment != null)
+            //        this.Close();
+            //}
+            //else
+            //{
+            if (ERP_Attachments.reference == null)
             {
-                savedAttachment = saveAndReturnAttachment(attReference);
-                if (savedAttachment != null)
-                    this.Close();
+                Progress_Reporter.Close_Progress();
+                XtraMessageBox.Show("Select Reference!", "ERP Attachment");
+                return;
+            }
+            Progress_Reporter.Show_Progress("Saving Attachment", "Please Wait..");
+            axWindowsMediaPlayer1.close();
+            if (string.IsNullOrEmpty(fileName))
+            {
+                if (LocalBuffer.LocalBuffer.ConfigurationBufferList == null)
+                {
+                    Progress_Reporter.Close_Progress();
+                    XtraMessageBox.Show("Please Select Default Attachment Path!", "ERP Attachment");
+                    return;
+                }
+
+
+                if (acquiredImage != null)
+                {
+                    string ftpurl = FTPInterface.FTPAttachment.SendConsigneeImageAttachement(TypeId, attReference.ToString(), acquiredImage);
+                    if (acquiredImage.Tag == "Camera")
+                    {
+                        // string savePath = pathToSave + @"\Snapshoot " + DateTime.Now.ToString("yyyyMMddHHmmss") +".png";
+                        // acquiredImage.Save(savePath, ImageFormat.Png);
+                        //string ftpurl =   FTPInterface.FTPAttachment.SendConsigneeImageAttachement(TypeId, attReference.ToString(), acquiredImage);
+
+
+                        attachmentObj.Url = ftpurl;
+                        attachmentObj.Remark = ".png";
+                        attachmentObj.Type = CNETConstantes.ATTACHMENT_TYPE_PICTURE;
+                    }
+                    if (acquiredImage.Tag == "Scanner")
+                    {
+                        //string savePath = pathToSave + @"\Scanned Image " + DateTime.Now.ToString("yyyyMMddHHmmss") +".png";
+                        //acquiredImage.Save(savePath, ImageFormat.Png);
+                        attachmentObj.Url = ftpurl;
+                        attachmentObj.Remark = ".png";
+                        attachmentObj.Type = CNETConstantes.ATTACHMENT_TYPE_PICTURE;
+                    }
+                    if (acquiredImage.Tag == "Edited")
+                    {
+                        //string savePath = pathToSave + @"\Edited Image " + DateTime.Now.ToString("yyyyMMddHHmmss") +".png";
+                        //acquiredImage.Save(savePath, ImageFormat.Png);
+                        attachmentObj.Url = ftpurl;
+                        attachmentObj.Remark = ".png";
+                        attachmentObj.Type = CNETConstantes.ATTACHMENT_TYPE_PICTURE;
+                    }
+                }
+                else
+                {
+                    Progress_Reporter.Close_Progress();
+                    XtraMessageBox.Show("No File To Save", "ERP Attachment");
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(txtDescription.Text.ToString()))
+                {
+                    Progress_Reporter.Close_Progress();
+                    XtraMessageBox.Show("Please Enter Description", "ERP Attachment");
+                    return;
+                }
+                if (txtDescription.Text == "logo" && acquiredImage != null)
+                {
+
+                    string ftpurl = "";
+                    if (!voucherFlag)
+                        ftpurl = FTPInterface.FTPAttachment.SendGSlFileAttachement(TypeId, fileName, attReference.Value);
+                    else
+                        ftpurl = FTPInterface.FTPAttachment.SendTransactionAttachement(TypeId, fileName, attReference.Value);
+
+
+                    //byteData = ImagetoByte(acquiredImage);
+                    //attachmentObj.file = byteData;
+                    // string ftpurl = FTPInterface.FTPAttachment.SendConsigneeImageAttachement(TypeId, attReference.ToString(), acquiredImage);
+                    //string pathToSave = DefaultAttachmentPath;
+                    //string savePath = pathToSave + @"\Edited Image " + DateTime.Now.ToString("yyyyMMddHHmmss") +".png";
+                    //acquiredImage.Save(savePath, ImageFormat.Png);
+                    attachmentObj.Url = ftpurl;
+                    attachmentObj.Remark = ".png";
+                    attachmentObj.Type = CNETConstantes.ATTACHMENT_TYPE_PICTURE;
+                }
             }
             else
             {
-                if (CNET_Attachments.reference == null)
+                //if (AttachmentIsFTP)
+                //{
+                //    string ImageType = "Image";
+                //    LookupDTO ImageTypeLookup = LocalBuffer.LocalBuffer.LookUpBufferList.FirstOrDefault(x => x.Id == catagory);
+                //    if (ImageTypeLookup != null)
+                //        ImageType = ImageTypeLookup.Description;
+                //    bool initalized = FTPAttachment.InitalizeFTPAttachment(AttachmentIsFTPTINNo, AttachmentIsFTPOrganizationUnitDef, AttachmentIsFTPRoom, AttachmentFTPRoomType);
+                //    if (!initalized)
+                //        return;
+
+                //    string ftppath = FTPAttachment.SendFTPImage(ImageType, fileName);
+
+                //    attachmentObj.Url = ftppath;
+                //    attachmentObj.Type = getLookUp(extension);
+                //}
+                //else
+                //{
+                //if (DefaultAttachmentPath != null && !string.IsNullOrEmpty(DefaultAttachmentPath))
+                //{
+                //    if (!Directory.Exists(DefaultAttachmentPath))
+                //    {
+                //        try
+                //        {
+                //            Directory.CreateDirectory(DefaultAttachmentPath);
+                //        }
+                //        catch
+                //        {
+                //            Progress_Reporter.Close_Progress();
+                //            XtraMessageBox.Show("Default Attachment Path Not Found!", "ERP Attachment");
+                //            return;
+                //        }
+                //    }
+
+                //    string pathToSave = DefaultAttachmentPath;
+                /*  string Name = Path.GetFileName(fileName);
+                  string destfile = Path.Combine(pathToSave, Name);
+                  if (File.Exists(destfile))
+                  {
+                      int namecount = 1;
+                      while (File.Exists(destfile))
+                      {
+                          string namewithoutex = Path.GetFileNameWithoutExtension(fileName);
+                          string fileextension = Name.Replace(namewithoutex, "");
+                          Name = namewithoutex + "(" + namecount.ToString() + ")" + fileextension;
+                          destfile = Path.Combine(pathToSave, Name);
+                          namecount++;
+                      }
+                  }
+                  File.Copy(fileName, destfile, true);
+                */
+                string ftpurl = "";
+                if (!voucherFlag)
+                    ftpurl = FTPInterface.FTPAttachment.SendGSlFileAttachement(TypeId, fileName, attReference.Value);
+                else
+                    ftpurl = FTPInterface.FTPAttachment.SendTransactionAttachement(TypeId, fileName, attReference.Value);
+                // string ftpurl = FTPInterface.FTPAttachment.SendGSlFileAttachement(TypeId, fileName, attReference.Value);
+                attachmentObj.Url = ftpurl;
+                attachmentObj.Type = getLookUp(extension);
+                attachmentObj.Remark = Path.GetExtension(fileName);
+
+
+                if (string.IsNullOrEmpty(txtDescription.Text.ToString()))
                 {
-                    CNETInfoReporter.Hide();
-                    XtraMessageBox.Show("Select Reference!", "CNET Attachment");
+                    Progress_Reporter.Close_Progress();
+                    XtraMessageBox.Show("Please Enter Description", "ERP Attachment");
                     return;
                 }
-                CNETInfoReporter.WaitForm("Saving Attachment", "Please Wait..", 1, 2);
-                axWindowsMediaPlayer1.close();
-                if (string.IsNullOrEmpty(fileName))
+                if (txtDescription.Text == "logo" && !string.IsNullOrEmpty(fileName))
                 {
-                    if (LoginPage.Authentication.ConfigurationBufferList == null)
-                    {
-                        CNETInfoReporter.Hide();
-                        XtraMessageBox.Show("Please Select Default Attachment Path!", "CNET Attachment");
-                        return;
-                    }
+                    /* string pathToSave = DefaultAttachmentPath;
+                     string destfile = Path.Combine(pathToSave, Name);
+                     if (File.Exists(destfile))
+                     {
+                         int namecount = 1;
+                         while (File.Exists(destfile))
+                         {
+                             string namewithoutex = Path.GetFileNameWithoutExtension(fileName);
+                             string fileextension = Name.Replace(namewithoutex, "");
+                             Name = namewithoutex + "(" + namecount.ToString() + ")" + fileextension;
+                             destfile = Path.Combine(pathToSave, Name);
+                             namecount++;
+                         }
+                     }*/
 
-                    if (DefaultAttachmentPath != null && !string.IsNullOrEmpty(DefaultAttachmentPath))
-                    {
-                        if (!Directory.Exists(DefaultAttachmentPath))
-                        {
-                            try
-                            {
-                                Directory.CreateDirectory(DefaultAttachmentPath);
-                            }
-                            catch
-                            {
-                                CNETInfoReporter.Hide();
-                                XtraMessageBox.Show("Default Attachment Path Not Found!", "CNET Attachment");
-                                return;
-                            }
-                        }
-                        string pathToSave = DefaultAttachmentPath;
-                        if (acquiredImage != null)
-                        {
-                            if (acquiredImage.Tag == "Camera")
-                            {
-                                string savePath = pathToSave + @"\Snapshoot " + DateTime.Now.ToString("yyyyMMddHHmmss") +
-                                              ".png";
-                                acquiredImage.Save(savePath, ImageFormat.Png);
-                                attachmentObj.url = savePath;
-                                attachmentObj.remark = ".png";
-                                attachmentObj.type = CNETConstantes.ATTACHMENT_TYPE_PICTURE;
-                            }
-                            if (acquiredImage.Tag == "Scanner")
-                            {
-                                string savePath = pathToSave + @"\Scanned Image " + DateTime.Now.ToString("yyyyMMddHHmmss") +
-                                              ".png";
-                                acquiredImage.Save(savePath, ImageFormat.Png);
-                                attachmentObj.url = savePath;
-                                attachmentObj.remark = ".png";
-                                attachmentObj.type = CNETConstantes.ATTACHMENT_TYPE_PICTURE;
-                            }
-                            if (acquiredImage.Tag == "Edited")
-                            {
-                                string savePath = pathToSave + @"\Edited Image " + DateTime.Now.ToString("yyyyMMddHHmmss") +
-                                              ".png";
-                                acquiredImage.Save(savePath, ImageFormat.Png); attachmentObj.url = savePath;
-                                attachmentObj.remark = ".png";
-                                attachmentObj.type = CNETConstantes.ATTACHMENT_TYPE_PICTURE;
-                            }
-                        }
-                        else
-                        {
-                            CNETInfoReporter.Hide();
-                            XtraMessageBox.Show("No File To Save", "CNET Attachment");
-                            return;
-                        }
-                    }
-                    if (txtDescription.Text.IsEmpty())
-                    {
-                        CNETInfoReporter.Hide();
-                        XtraMessageBox.Show("Please Enter Description", "CNET Attachment");
-                        return;
-                    }
-                    if (txtDescription.Text == "logo" && acquiredImage != null)
-                    {
-                        byteData = ImagetoByte(acquiredImage);
-                        attachmentObj.file = byteData;
-                        attachmentObj.remark = ".png";
-                        attachmentObj.type = CNETConstantes.ATTACHMENT_TYPE_PICTURE;
-                    }
-                }
-                else
-                {
-
-                    if (!AttachmentIsFTP &&  string.IsNullOrEmpty(DefaultAttachmentPath))
-                    {
-                        CNETInfoReporter.Hide();
-                        XtraMessageBox.Show("Please Select Default Attachment Path!", "CNET Attachment");
-                        return;
-                    }
+                    if (!voucherFlag)
+                        ftpurl = FTPInterface.FTPAttachment.SendGSlFileAttachement(TypeId, fileName, attReference.Value);
                     else
-                    {
-                        if (AttachmentIsFTP)
-                        {
-                            string ImageType = "Image";
-                            Lookup ImageTypeLookup = LoginPage.Authentication.LookupBufferList.FirstOrDefault(x => x.code == catagory);
-                            if (ImageTypeLookup != null)
-                                ImageType = ImageTypeLookup.description;
-                            bool initalized = FTPAttachment.InitalizeFTPAttachment(AttachmentIsFTPTINNo, AttachmentIsFTPOrganizationUnitDef, AttachmentIsFTPRoom, AttachmentFTPRoomType);
-                          if (!initalized)
-                                return;
+                        ftpurl = FTPInterface.FTPAttachment.SendTransactionAttachement(TypeId, fileName, attReference.Value);
+                    // ftpurl = FTPInterface.FTPAttachment.SendGSlFileAttachement(TypeId, fileName, attReference.Value);
+                    attachmentObj.Url = ftpurl;
 
-                            string ftppath = FTPAttachment.SendFTPImage(ImageType, fileName);
 
-                            attachmentObj.url = ftppath;
-                            attachmentObj.type = getLookUp(extension);
-                        }
-                        else
-                        {
-                            if (DefaultAttachmentPath != null && !string.IsNullOrEmpty(DefaultAttachmentPath))
-                            {
-                                if (!Directory.Exists(DefaultAttachmentPath))
-                                {
-                                    try
-                                    {
-                                        Directory.CreateDirectory(DefaultAttachmentPath);
-                                    }
-                                    catch
-                                    {
-                                        CNETInfoReporter.Hide();
-                                        XtraMessageBox.Show("Default Attachment Path Not Found!", "CNET Attachment");
-                                        return;
-                                    }
-                                }
-
-                                string pathToSave = DefaultAttachmentPath;
-                                string Name = Path.GetFileName(fileName);
-                                string destfile = Path.Combine(pathToSave, Name);
-                                if (File.Exists(destfile))
-                                {
-                                    int namecount = 1;
-                                    while (File.Exists(destfile))
-                                    {
-                                        string namewithoutex = Path.GetFileNameWithoutExtension(fileName);
-                                        string fileextension = Name.Replace(namewithoutex, "");
-                                        Name = namewithoutex + "(" + namecount.ToString() + ")" + fileextension;
-                                        destfile = Path.Combine(pathToSave, Name);
-                                        namecount++;
-                                    }
-                                }
-                                File.Copy(fileName, destfile, true);
-                                attachmentObj.url = destfile;
-                                attachmentObj.type = getLookUp(extension);
-                                attachmentObj.remark = Path.GetExtension(destfile);
-                            }
-                            if (txtDescription.Text.IsEmpty())
-                            {
-                                CNETInfoReporter.Hide();
-                                XtraMessageBox.Show("Please Enter Description", "CNET Attachment");
-                                return;
-                            }
-                            if (txtDescription.Text == "logo" && !string.IsNullOrEmpty(fileName))
-                            {
-                                byteData = fileToByte(fileName);
-                                attachmentObj.file = byteData;
-                                attachmentObj.url = fileName;
-                                attachmentObj.remark = Path.GetExtension(fileName).ToLower();
-                                attachmentObj.type = getLookUp(extension);
-                            }
-                        }
-                    }
+                    //File.Copy(fileName, destfile, true);
+                    //    attachmentObj.Url = destfile;
+                    attachmentObj.Remark = Path.GetExtension(fileName).ToLower();
+                    attachmentObj.Type = getLookUp(extension);
                 }
 
 
-                if (attachmentObj.file == null && attachmentObj.url == "")
-                {
-                    CNETInfoReporter.Hide();
-                    XtraMessageBox.Show("No File To Save", "CNET Attachment");
-                    return;
-                }
-                else
-                {
-                    if (txtDescription.Text.IsEmpty())
-                    {
-                        CNETInfoReporter.Hide();
-                        XtraMessageBox.Show("Please Enter Description", "CNET Attachment");
-                        return;
-                    }
-
-                    else
-                    {
-                        attachmentObj.description = txtDescription.Text;
-
-                      
-
-                        attachmentObj.reference = CNET_Attachments.reference;
-                        var referenceItem = UIProcessManager.GetAttachmentByReference(attachmentObj.reference);
-                        attachmentObj.index = (byte)referenceItem.Count;
-                        attachmentObj.catagory = catagory;
-                        UIProcessManager.CreateAttachment(attachmentObj);
-                        txtDescription.Text = "";
-                        txtUrl.Text = "";
-                        pictureEdit1.Visible = false;
-                        richEditControl1.Visible = false;
-                        pdfViewer1.Visible = false;
-                        spreadsheetControl1.Visible = false;
-                        axWindowsMediaPlayer1.Visible = false;
-
-                    }
-
-                    CNETInfoReporter.WaitForm("Saving Attachment", "Please Wait..", 2, 2);
-                    CNETInfoReporter.Hide();
-                    XtraMessageBox.Show("Attachment Saved!", "CNET Attachment");
-                }
-
-                fileName = null;
-                acquiredImage = null;
-                Hide();
             }
+
+
+            if (attachmentObj.Url == "")
+            {
+                Progress_Reporter.Close_Progress();
+                XtraMessageBox.Show("No File To Save", "ERP Attachment");
+                return;
+            }
+            else
+            {
+                if (txtDescription.Text == null || string.IsNullOrEmpty(txtDescription.Text.ToString()))
+                {
+                    Progress_Reporter.Close_Progress();
+                    XtraMessageBox.Show("Please Enter Description", "ERP Attachment");
+                    return;
+                }
+                else
+                {
+                    attachmentObj.Description = txtDescription.Text.ToString();
+
+
+
+                    attachmentObj.Reference = ERP_Attachments.reference;
+                    var referenceItem = UIProcessManager.GetAttachmentByReference(attachmentObj.Reference);
+                    attachmentObj.Index = (byte)referenceItem.Count;
+                    attachmentObj.Category = catagory;
+                    UIProcessManager.CreateAttachment(attachmentObj);
+                    txtDescription.Text = "";
+                    txtUrl.Text = "";
+                    pictureEdit1.Visible = false;
+                    richEditControl1.Visible = false;
+                    pdfViewer1.Visible = false;
+                    spreadsheetControl1.Visible = false;
+                    axWindowsMediaPlayer1.Visible = false;
+
+                }
+
+                Progress_Reporter.Show_Progress("Saving Attachment", "Please Wait..");
+                Progress_Reporter.Close_Progress();
+                XtraMessageBox.Show("Attachment Saved!", "ERP Attachment");
+            }
+
+            fileName = null;
+            acquiredImage = null;
+            Hide();
+            // }
             cameraMain.closeOpenCamera();
         }
 
@@ -621,7 +702,7 @@ namespace ERP.Attachement
                     }
                     catch
                     {
-                        XtraMessageBox.Show("File too Large! \n Only URL", "CNET Attachment");
+                        XtraMessageBox.Show("File too Large! \n Only URL", "ERP Attachment");
                     }
                 }
             }
@@ -650,9 +731,9 @@ namespace ERP.Attachement
             return ms.ToArray();
         }
 
-        public static string getLookUp(string ext)
+        public static int getLookUp(string ext)
         {
-            var lookUP = "";
+            int lookUP = 0;
             if (ext == ".jpg")
                 lookUP = CNETConstantes.ATTACHMENT_TYPE_PICTURE;
             else if (ext == ".png")
@@ -720,7 +801,7 @@ namespace ERP.Attachement
                 lookUP = CNETConstantes.ATTACHMENT_TYPE_VIDEO;
             else
             {
-                lookUP = "";
+                lookUP = 0;
             }
 
             return lookUP;
@@ -733,7 +814,7 @@ namespace ERP.Attachement
             AForge.Video.DirectShow.FilterInfoCollection avialableCameras = cameraMain.getCameraDevices();
             if (avialableCameras == null || avialableCameras.Count <= 0)
             {
-                XtraMessageBox.Show("No Camera is connected to this PC", "CNET Attachment", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                XtraMessageBox.Show("No Camera is connected to this PC", "ERP Attachment", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             else
@@ -756,8 +837,7 @@ namespace ERP.Attachement
             bbiScanDocumnet.Visible = false;
             txtUrl.Visible = false;
             cbDevices.Visible = true;
-            cbScannerDevices.Visible = false;
-            label1.Text = "Device List";
+            cbScannerDevices.Visible = false; 
         }
 
 
@@ -778,7 +858,7 @@ namespace ERP.Attachement
                 //check if device is not available
                 if (cbScannerDevices.Properties.Items.Count == 0)
                 {
-                    XtraMessageBox.Show("No Scanner is connected to this PC", "CNET Attachment", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    XtraMessageBox.Show("No Scanner is connected to this PC", "ERP Attachment", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
                 else
@@ -788,8 +868,7 @@ namespace ERP.Attachement
                     bbiScanDocumnet.Visible = true;
                     txtUrl.Visible = false;
                     cbDevices.Visible = false;
-                    cbScannerDevices.Visible = true;
-                    label1.Text = "Scanners";
+                    cbScannerDevices.Visible = true; 
                     cbScannerDevices.Visible = true;
 
                     if (cbScannerDevices.Properties.Items.Count > 0)
@@ -871,7 +950,7 @@ namespace ERP.Attachement
         {
             if (cbScannerDevices.SelectedItem == null)
             {
-                XtraMessageBox.Show("Please Select Scanner!", "CNET Attachment");
+                XtraMessageBox.Show("Please Select Scanner!", "ERP Attachment");
                 return;
             }
             acquiredImage = scaner.Scan(cbScannerDevices.SelectedItem.ToString()).FirstOrDefault();
@@ -921,202 +1000,121 @@ namespace ERP.Attachement
         }
 
         #region NEW METHOD
-        private Attachment saveAndReturnAttachment(string code)
+        private AttachmentDTO saveAndReturnAttachment(int id)
         {
             axWindowsMediaPlayer1.close();
             if (string.IsNullOrEmpty(fileName))
             {
-                    if (LoginPage.Authentication.ConfigurationBufferList == null)
-                    {
-                        CNETInfoReporter.Hide();
-                        XtraMessageBox.Show("Please Select Default Attachment Path!", "CNET Attachment");
-                        return null;
-                    }
-                    List<Configuration> value = LoginPage.Authentication.ConfigurationBufferList.Where(x => x.reference == CNETConstantes.CNET_ERP2016).ToList();
-                    if (value == null || value.Count == 0)
-                    {
-                        CNETInfoReporter.Hide();
-                        XtraMessageBox.Show("Please Select Default Attachment Path!", "CNET Attachment");
-                        return null;
-                    } 
-                    if (DefaultAttachmentPath != null && !string.IsNullOrEmpty(DefaultAttachmentPath))
-                    {
-                        if (!Directory.Exists(DefaultAttachmentPath))
-                        {
-                            try
-                            {
-                                Directory.CreateDirectory(DefaultAttachmentPath);
-                            }
-                            catch
-                            {
-                                CNETInfoReporter.Hide();
-                                XtraMessageBox.Show("Default Attachment Path Not Found!", "CNET Attachment");
-                                return null;
-                            }
-                        }
-                        string pathToSave = DefaultAttachmentPath;
-                        //acquiredImage = Image.FromFile(fileName, true);
-                        if (acquiredImage != null)
-                        {
-                            if (acquiredImage.Tag == "Camera")
-                            {
-                                string savePath = pathToSave + @"\Snapshoot " + DateTime.Now.ToString("yyyyMMddHHmmss") +
-                                              ".png";
-                                acquiredImage.Save(savePath, ImageFormat.Png);
-                                attachmentObj.url = savePath;
-                                attachmentObj.remark = ".png";
-                                attachmentObj.type = CNETConstantes.ATTACHMENT_TYPE_PICTURE;
-                            }
-                            if (acquiredImage.Tag == "Scanner")
-                            {
-                                string savePath = pathToSave + @"\ScannedImage" + DateTime.Now.ToString("yyyyMMddHHmmss") +
-                                                  ".png";
-                                try
-                                {
-                                    
-                                    Bitmap bmp = new Bitmap(acquiredImage.Width,acquiredImage.Height);
-                                    Graphics graphics = Graphics.FromImage(bmp);
-                                    graphics.DrawImage(acquiredImage, new Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel);
-                                    acquiredImage.Dispose();
-                                    acquiredImage = bmp;
-                                    graphics.Dispose();
-                                    
-                                    acquiredImage.Save(savePath, ImageFormat.Png);
 
-                                    attachmentObj.url = savePath;
-                                    attachmentObj.remark = ".png";
-                                    attachmentObj.type = CNETConstantes.ATTACHMENT_TYPE_PICTURE;
-                                }
-                                catch (Exception ex) 
-                                {
-                                    XtraMessageBox.Show(string.Format("Saving  Image @ {0} Error{}", savePath));
-                                }
-                            }
-                            if (acquiredImage.Tag == "Edited")
-                            {
-                                string savePath = pathToSave + @"\Edited Image " + DateTime.Now.ToString("yyyyMMddHHmmss") +
-                                              ".png";
-                                acquiredImage.Save(savePath, ImageFormat.Png); attachmentObj.url = savePath;
-                                attachmentObj.remark = ".png";
-                                attachmentObj.type = CNETConstantes.ATTACHMENT_TYPE_PICTURE;
-                            }
-                        }
-                        else
-                        {
-                            CNETInfoReporter.Hide();
-                            XtraMessageBox.Show("No File To Save", "CNET Attachment");
-                            return null;
-                        }
 
+                //acquiredImage = Image.FromFile(fileName, true);
+                if (acquiredImage != null)
+                {
+                    if (acquiredImage.Tag == "Camera")
+                    {
+                        //string savePath = pathToSave + @"\Snapshoot " + DateTime.Now.ToString("yyyyMMddHHmmss") +
+                        //              ".png";
+                        //acquiredImage.Save(savePath, ImageFormat.Png);
+                        string ftpurl = FTPInterface.FTPAttachment.SendConsigneeImageAttachement(TypeId, attReference.ToString(), acquiredImage);
+                        attachmentObj.Url = ftpurl;
+                        attachmentObj.Remark = ".png";
+                        attachmentObj.Type = CNETConstantes.ATTACHMENT_TYPE_PICTURE;
                     }
-             
+                    if (acquiredImage.Tag == "Scanner")
+                    {
+                        //string savePath = pathToSave + @"\ScannedImage" + DateTime.Now.ToString("yyyyMMddHHmmss") +
+                        //                  ".png";
+                        try
+                        {
+
+                            Bitmap bmp = new Bitmap(acquiredImage.Width, acquiredImage.Height);
+                            Graphics graphics = Graphics.FromImage(bmp);
+                            graphics.DrawImage(acquiredImage, new Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel);
+                            acquiredImage.Dispose();
+                            acquiredImage = bmp;
+                            graphics.Dispose();
+
+                            //acquiredImage.Save(savePath, ImageFormat.Png);
+
+                            string ftpurl = FTPInterface.FTPAttachment.SendConsigneeImageAttachement(TypeId, attReference.ToString(), acquiredImage);
+                            attachmentObj.Url = ftpurl;
+                            attachmentObj.Remark = ".png";
+                            attachmentObj.Type = CNETConstantes.ATTACHMENT_TYPE_PICTURE;
+                        }
+                        catch (Exception ex)
+                        {
+                            XtraMessageBox.Show("Saving  Image Error" + Environment.NewLine + ex.Message);
+                        }
+                    }
+                    if (acquiredImage.Tag == "Edited")
+                    {
+                        //string savePath = pathToSave + @"\Edited Image " + DateTime.Now.ToString("yyyyMMddHHmmss") +
+                        //              ".png";
+                        //acquiredImage.Save(savePath, ImageFormat.Png);
+                        string ftpurl = FTPInterface.FTPAttachment.SendConsigneeImageAttachement(TypeId, attReference.ToString(), acquiredImage);
+                        attachmentObj.Url = ftpurl;
+                        attachmentObj.Remark = ".png";
+                        attachmentObj.Type = CNETConstantes.ATTACHMENT_TYPE_PICTURE;
+                    }
+                }
+                else
+                {
+                    Progress_Reporter.Close_Progress();
+                    XtraMessageBox.Show("No File To Save", "ERP Attachment");
+                    return null;
+                }
+
+
+
             }
             else
             {
-                if (LoginPage.Authentication.ConfigurationBufferList == null)
-                    {
-                        CNETInfoReporter.Hide();
-                        XtraMessageBox.Show("Please Select Default Attachment Path!", "CNET Attachment");
-                        return null;
-                    }
-                    List<Configuration> value = LoginPage.Authentication.ConfigurationBufferList.Where(x => x.reference == CNETConstantes.CNET_ERP2016).ToList();
-                    if (value == null || value.Count == 0)
-                    {
-                        CNETInfoReporter.Hide();
-                        XtraMessageBox.Show("Please Select Default Attachment Path!", "CNET Attachment");
-                        return null;
-                    }
-                    else
-                    {
-                        if (DefaultAttachmentPath != null && !string.IsNullOrEmpty(DefaultAttachmentPath))
-                        {
-                            if (!Directory.Exists(DefaultAttachmentPath))
-                            {
-                                try
-                                {
-                                    Directory.CreateDirectory(DefaultAttachmentPath);
-                                }
-                                catch
-                                {
-                                    CNETInfoReporter.Hide();
-                                    XtraMessageBox.Show("Default Attachment Path Not Found!", "CNET Attachment");
-                                    return null;
-                                }
-                            }
-                            string pathToSave = DefaultAttachmentPath;
-                            if (!Directory.Exists(pathToSave))
-                            {
-                                Directory.CreateDirectory(pathToSave);
-                            }
-                            string Name = Path.GetFileName(fileName);
-                            string destfile = Path.Combine(pathToSave, Name);
+                string ftpurl = "";
+                if (!voucherFlag)
+                    ftpurl = FTPInterface.FTPAttachment.SendGSlFileAttachement(TypeId, fileName, attReference.Value);
+                else
+                    ftpurl = FTPInterface.FTPAttachment.SendTransactionAttachement(TypeId, fileName, attReference.Value);
+                attachmentObj.Url = ftpurl;
+                attachmentObj.Remark = Path.GetExtension(fileName);
 
-                            if (File.Exists(destfile))
-                            {
-                                int namecount = 1;
-                                while (File.Exists(destfile))
-                                {
-                                    string namewithoutex = Path.GetFileNameWithoutExtension(fileName);
-                                    string fileextension = Name.Replace(namewithoutex, "");
-                                    Name = namewithoutex + "(" + namecount.ToString() + ")" + fileextension;
-                                    destfile = Path.Combine(pathToSave, Name);
-                                    namecount++;
-                                }
-                            }
-                            File.Copy(fileName, destfile, true);
-                            attachmentObj.url = destfile;
-                            attachmentObj.remark = Path.GetExtension(destfile);
-                        }
-                        else
-                        {
-                            CNETInfoReporter.Hide();
-                            XtraMessageBox.Show("Default Attachment Path Not Found!", "CNET Attachment");
-                            return null;
-                        }
-                    }
-              
-                attachmentObj.type = getLookUp(extension);
+                attachmentObj.Type = getLookUp(extension);
             }
 
 
-            if (attachmentObj.file == null && attachmentObj.url == "")
+            if (string.IsNullOrEmpty(attachmentObj.Url))
             {
-                CNETInfoReporter.Hide();
-                XtraMessageBox.Show("No File To Save", "CNET Attachment");
+                Progress_Reporter.Close_Progress();
+                XtraMessageBox.Show("No File To Save", "ERP Attachment");
                 return null;
             }
             else
             {
-                if (txtDescription.Text.IsEmpty())
+                if (txtDescription.Text == null || string.IsNullOrEmpty(txtDescription.Text.ToString()))
                 {
-                    CNETInfoReporter.Hide();
-                    XtraMessageBox.Show("Please Enter Description", "CNET Attachment");
+                    Progress_Reporter.Close_Progress();
+                    XtraMessageBox.Show("Please Enter Description", "ERP Attachment");
                     return null;
                 }
-
                 else
                 {
 
-                    if (temporaryAttachments == null || temporaryAttachments.Count == 0)
-                        attachmentObj.code = "0";
-                    else
-                        if (temporaryAttachments.Last().code.ToLower().Contains("att"))
-                        {
-                            int codex = Int32.Parse(new String(temporaryAttachments.Last().code.Where(Char.IsDigit).ToArray())) + 1;
-                            attachmentObj.code = String.Format("Att{0}", codex);
-                        }
-                        else
+                    //    if (temporaryAttachments == null || temporaryAttachments.Count == 0)
+                    //        attachmentObj.Id=0;
+                    //    else
+                    //        if (temporaryAttachments.Last().code.ToLower().Contains("att"))
+                    //        {
+                    //            int codex = Int32.Parse(new String(temporaryAttachments.Last().code.Where(Char.IsDigit).ToArray())) + 1;
+                    //            attachmentObj.code = String.Format("Att{0}", codex);
+                    //        }
+                    //        else 
+                    //            attachmentObj.code = (Convert.ToInt16(temporaryAttachments.Last().code) + 1).ToString();
 
-                            attachmentObj.code = (Convert.ToInt16(temporaryAttachments.Last().code) + 1).ToString();
 
-
-                    attachmentObj.description = txtDescription.Text;
-
-                   
-
-                    attachmentObj.reference = !string.IsNullOrEmpty(code) ? code : "";
-                    attachmentObj.index = 0;
-                    attachmentObj.catagory = catagory;
+                    attachmentObj.Id = 0;
+                    attachmentObj.Description = txtDescription.Text.ToString();
+                    attachmentObj.Reference = 0;
+                    attachmentObj.Index = 0;
+                    attachmentObj.Category = catagory;
                     txtDescription.Text = "";
                     txtUrl.Text = "";
                     pictureEdit1.Visible = false;
@@ -1127,7 +1125,7 @@ namespace ERP.Attachement
 
                 }
 
-                CNETInfoReporter.Hide();
+                Progress_Reporter.Close_Progress();
                 return attachmentObj;
             }
 

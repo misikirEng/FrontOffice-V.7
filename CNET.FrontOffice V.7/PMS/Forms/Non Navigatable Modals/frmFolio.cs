@@ -1489,7 +1489,9 @@ namespace CNET.FrontOffice_V._7.Forms.Non_Navigatable_Modals
                         TotalPaid = teTotalPaid.Text,
                         Vat = teVAT.Text,
                         ConsigneeId = RegistrationExt.GuestId,
-                        ConsigneeUnit = registrationExt.ConsigneeUnit
+                        ConsigneeUnit = registrationExt.ConsigneeUnit,
+                        HeaderText = "Proforma Folio",
+                        User = LocalBuffer.LocalBuffer.CurrentLoggedInUser.UserName
                     };
                     if (registrationExt.CompanyId != null)
                     {

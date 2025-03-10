@@ -5388,10 +5388,11 @@ namespace CNET.FrontOffice_V._7
         {
             try
             {
-                //RegistrationListVMDTO regExten = (RegistrationListVMDTO)gridView_regDoc.GetRow(gridView_regDoc.GetSelectedRows()[0]);
-                //frmAttachment frmAttachment = new frmAttachment();
-                //frmAttachment.RegExt = regExten;
-                //frmAttachment.ShowDialog();
+                RegistrationListVMDTO regExten = (RegistrationListVMDTO)gridView_regDoc.GetRow(gridView_regDoc.GetSelectedRows()[0]);
+                frmAttachment frmAttachment = new frmAttachment();
+                frmAttachment.IntType = CNETConstantes.REGISTRATION_VOUCHER;
+                frmAttachment.RegExt = regExten;
+                frmAttachment.ShowDialog();
             }
             catch (Exception ex)
             {
@@ -5795,6 +5796,16 @@ namespace CNET.FrontOffice_V._7
             if (regExten.SourceId != null)
                 listOfRightView.AddRange(GetAndPopulateConsigneeInfo(regExten.SourceId.Value, "Other Consignee: - Source"));
 
+
+
+
+            List<VwAccompanyingViewDTO> CheckaccompanyGuest = UIProcessManager.GetAccompanyingGuestByVoucher(regExten.Id);
+
+            if (CheckaccompanyGuest != null && CheckaccompanyGuest.Count > 0)
+            {
+                foreach (VwAccompanyingViewDTO accompany in CheckaccompanyGuest)
+                    listOfRightView.AddRange(GetAndPopulateConsigneeInfo(accompany.Consignee, "Other Accompany Guest"));
+            }    
 
 
             gcConsigneeDetail.DataSource = listOfRightView;

@@ -305,7 +305,7 @@ namespace CNET.FrontOffice_V._7.Forms.Non_Navigatable_Modals
 
                // MessageBox.Show("Getting intime");
                 string lockNumber = teLockNumber.Text;
-                DateTime intime = RegExt.Arrival.Date;// currentTime.Value;
+                DateTime intime =  currentTime.Value; //RegExt.ArrivalDate
 
                 //MessageBox.Show("Getting isDuplicate");
                 //for BE-TECH we need the first guest's serial number
@@ -320,7 +320,7 @@ namespace CNET.FrontOffice_V._7.Forms.Non_Navigatable_Modals
                         guestSN = voucher.Remark;
                     else
                        // intime = DateTime.ParseExact(voucher.Remark, _doorLock.GetStringFormatOfDate(), CultureInfo.InvariantCulture);
-                    intime = RegExt.Arrival.Date;
+                    intime = currentTime.Value;
                 }
 
 

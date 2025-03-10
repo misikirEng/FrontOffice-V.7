@@ -8,8 +8,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using BitmapFilters;
-using CNETAttachement;
+using BitmapFilters; 
 using ImageContrast;
 
 namespace CNET_ImageEditor

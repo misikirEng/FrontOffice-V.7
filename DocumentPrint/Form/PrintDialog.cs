@@ -286,7 +286,7 @@ namespace DocumentPrint
 
                     if (File.Exists(localsavepath))
                     {
-                        bool Exist = FTPInterface.FTPAttachment.InitalizePMSFTPAttachment(LocalBuffer.LocalBuffer.CompanyConsigneeData.Tin);
+                        bool Exist = FTPInterface.FTPAttachment.InitalizeFTPAttachment(LocalBuffer.LocalBuffer.CompanyConsigneeData.Tin);
                         if (Exist)
                         {
                             FTPInterface.FTPAttachment.ORGUnitDefcode = BranchId != null ? BranchId.Value.ToString() : "0";

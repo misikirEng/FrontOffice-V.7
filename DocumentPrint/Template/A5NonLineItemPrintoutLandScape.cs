@@ -16,6 +16,7 @@ namespace DocumentPrint.Template
         {
             InitializeComponent();
 
+            lblFSNo.Text = header?.voucherExtensionString;
             #region logo 
             if (string.IsNullOrEmpty(header.paperType) == null || header.paperType != "Continuous")
             {

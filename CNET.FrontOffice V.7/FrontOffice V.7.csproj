@@ -109,6 +109,8 @@
     <Compile Include="PMS\Forms\HouseKeeping\TaskAssignmentReport.Designer.cs" />
     <Compile Include="PMS\Forms\Non Navigatable Modals\frmAccompanyingGuest.cs" />
     <Compile Include="PMS\Forms\Non Navigatable Modals\frmAccompanyingGuest.Designer.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmAttachment.cs" />
+    <Compile Include="PMS\Forms\Non Navigatable Modals\frmAttachment.Designer.cs" />
     <Compile Include="PMS\Forms\Non Navigatable Modals\frmDailyDetail.cs" />
     <Compile Include="PMS\Forms\Non Navigatable Modals\frmDailyDetail.Designer.cs" />
     <Compile Include="PMS\Forms\Non Navigatable Modals\frmDailyRateDetail.cs" />
@@ -207,6 +209,7 @@
     <EmbeddedResource Include="PMS\Forms\HouseKeeping\HouseKeepingReport.resx" />
     <EmbeddedResource Include="PMS\Forms\HouseKeeping\TaskAssignmentReport.resx" />
     <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmAccompanyingGuest.resx" />
+    <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmAttachment.resx" />
     <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmDailyDetail.resx" />
     <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmDailyRateDetail.resx" />
     <EmbeddedResource Include="PMS\Forms\Non Navigatable Modals\frmDateAmendment.resx" />
@@ -252,8 +255,11 @@
   <ItemGroup>
     <PackageReference Include="CNET.Payment.SDK" Version="2.2.0" />
     <PackageReference Include="DevExpress.Win.Design" Version="21.2.6" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
+    <PackageReference Include="OpenCvSharp4" Version="4.10.0.20241108" />
+    <PackageReference Include="OpenCvSharp4Extern" Version="1.0.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
     <PackageReference Include="System.IO.Ports" Version="7.0.0" />
+    <PackageReference Include="Tesseract" Version="4.1.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -275,6 +281,7 @@
     <Folder Include="ImageProvider\" />
     <Folder Include="ERPUpdater\" />
     <Folder Include="Mobile Payment\" />
+    <Folder Include="OCRdata\" />
     <Folder Include="PMSReport\Class\" />
   </ItemGroup>
 
@@ -282,9 +289,10 @@
     <ProjectReference Include="..\..\CNET.API.Manager\API.Manager.csproj" />
     <ProjectReference Include="..\..\CNET.FP.Tool\FP.Tool.csproj" />
     <ProjectReference Include="..\..\CNET.POS.FiscalPrinter\CNET.POS.FiscalPrinter.csproj" />
+    <ProjectReference Include="..\..\ERPPassportOCR\ERPPassportOCR\ERPPassportOCR.csproj" />
     <ProjectReference Include="..\..\ScribbleWinTab\ScribbleWinTab\ScribbleWinTab.csproj" />
-    <ProjectReference Include="..\..\V7PassportOCR\V7PassportOCR\V7PassportOCR.csproj" />
     <ProjectReference Include="..\DocumentPrint\DocumentPrint.csproj" />
+    <ProjectReference Include="..\ERP.Attachement\ERP.Attachement.csproj" />
     <ProjectReference Include="..\ERP.EventManagement\ERP.EventManagement\ERP.EventManagement.csproj" />
     <ProjectReference Include="..\FTPInterface\FTPInterface.csproj" />
     <ProjectReference Include="..\LocalBuffer\LocalBuffer.csproj" />
@@ -292,12 +300,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Accord">
-      <HintPath>..\..\V7PassportOCR\packages\Accord.dll</HintPath>
-    </Reference>
-    <Reference Include="Accord.Imaging">
-      <HintPath>..\..\V7PassportOCR\packages\Accord.Imaging.dll</HintPath>
-    </Reference>
     <Reference Include="AxInterop.WMPLib">
       <HintPath>..\..\..\..\..\..\CNET_V7_Domain\AxInterop.WMPLib.dll</HintPath>
     </Reference>
@@ -323,24 +325,28 @@
     <Reference Include="Microsoft.VisualBasic.PowerPacks">
       <HintPath>..\..\..\..\..\..\CNET_V7_Domain\Microsoft.VisualBasic.PowerPacks.dll</HintPath>
     </Reference>
-    <Reference Include="OpenCvSharp">
-      <HintPath>..\..\V7PassportOCR\packages\OpenCvSharp3-AnyCPU.3.3.1.20171117\lib\net40\OpenCvSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenCvSharp.Blob">
-      <HintPath>..\..\V7PassportOCR\packages\OpenCvSharp3-AnyCPU.3.3.1.20171117\lib\net40\OpenCvSharp.Blob.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenCvSharp.Extensions">
-      <HintPath>..\..\V7PassportOCR\packages\OpenCvSharp3-AnyCPU.3.3.1.20171117\lib\net40\OpenCvSharp.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenCvSharp.UserInterface">
-      <HintPath>..\..\V7PassportOCR\packages\OpenCvSharp3-AnyCPU.3.3.1.20171117\lib\net40\OpenCvSharp.UserInterface.dll</HintPath>
-    </Reference>
     <Reference Include="Pr22">
       <HintPath>..\..\..\..\Downloads\Compressed\pr-2.1.7-compat\pr-2.1.7-compat\sdk\pr-sdk-2.2.0.17\pr-sdk-2.2.0.17\dotnet\dlls\x64\Pr22.dll</HintPath>
     </Reference>
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="ERPUpdater\CLOUD PMS POS.exe">
+      <Link>CLOUD PMS POS.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ERPUpdater\DevExpress.Utils.v13.2.dll">
+      <Link>DevExpress.Utils.v13.2.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ERPUpdater\DevExpress.Utils.v13.2.UI.dll">
+      <Link>DevExpress.Utils.v13.2.UI.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ERPUpdater\DevExpress.XtraEditors.v13.2.dll">
+      <Link>DevExpress.XtraEditors.v13.2.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="ERPUpdater\ERPUpdaterV1.1.deps.json">
       <Link>ERPUpdaterV1.1.deps.json</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -367,6 +373,15 @@
     </None>
     <None Update="FrontOffice.PMS.exe.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="OCRdata\eng.traineddata">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="OCRdata\face.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Update="OCRdata\mrz.traineddata">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

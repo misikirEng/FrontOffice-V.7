@@ -150,7 +150,7 @@ namespace ERP.EventManagement
                     //PMSDataLogger.LogMessage("frmFrontOfficePOS", "Total Discount" + POS_Settings.TotalDiscount);
 
 
-                    bool isprinted = FiscalPrinters.PrintOperation(POS_Settings.Voucher_Definition, _printItems, POS_Settings.printerType, new List<Consignee>() { customerDto }, 0, _currentVoucherCode,
+                    bool isprinted = FiscalPrinters.PrintOperation(POS_Settings.Voucher_Definition, _printItems, POS_Settings.printerType, new List<Consignee>() { customerDto }, 0, isVoucherSaved.Voucher.Code,
                                      null, null, LocalBuffer.LocalBuffer.CurrentLoggedInUser.UserName, POS_Settings.TotalDiscount, POS_Settings.TotalServiceCharge, isVoucherSaved.Voucher.IssuedDate, 0);
                     if (!isprinted)
                     {
@@ -317,7 +317,7 @@ namespace ERP.EventManagement
                 voucherbuffer.Voucher = voFinal.voucher;
 
             voucherbuffer.Voucher.Type = CNETConstantes.TRANSACTIONTYPENORMALTXN;
-            voucherbuffer.Voucher.Definition = CNETConstantes.CHECK_OUT_BILL_VOUCHER;
+            voucherbuffer.Voucher.Definition =POS_Settings.Voucher_Definition;// CNETConstantes.CHECK_OUT_BILL_VOUCHER;
             voucherbuffer.Voucher.Type = CNETConstantes.TRANSACTIONTYPENORMALTXN;
             voucherbuffer.Voucher.LastState = CNETConstantes.OSD_PREPARED_STATE;
             voucherbuffer.Voucher.Code = _currentVoucherCode;
@@ -439,10 +439,10 @@ namespace ERP.EventManagement
         public frmFrontOfficePOS()
         {
             InitializeComponent();
-            CheckWorkflow();
+           // CheckWorkflow();
 
 
-            EventVoucherSetting.GetCurrentVoucherSetting(CNETConstantes.CHECK_OUT_BILL_VOUCHER);
+            //EventVoucherSetting.GetCurrentVoucherSetting(CNETConstantes.CHECK_OUT_BILL_VOUCHER);
             //Transaction Type
 
             List<SystemConstantDTO> paymentList = LocalBuffer.LocalBuffer.SystemConstantDTOBufferList.Where(l => l.Category == CNETConstantes.PAYMENT_METHODS && l.IsActive && l.Id != CNETConstantes.PAYMENTMETHODS_DIRECT_BILL).ToList();
@@ -466,14 +466,9 @@ namespace ERP.EventManagement
             CurrentTime = UIProcessManager.GetServiceTime().Value;
             deDate.EditValue = CurrentTime;
 
-            string VoucherID = GetCurrentId(0);
-            if (string.IsNullOrEmpty(VoucherID))
-            {
-                XtraMessageBox.Show("Unable to generate ID!", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            teVoucherNo.EditValue = VoucherID;
-
             cbeTransactionType.EditValue = "Cash Sales";
+
+         
 
 
         }
@@ -485,7 +480,7 @@ namespace ERP.EventManagement
         public string GetCurrentId(int generationType)
         {
 
-            string currentVoCode = UIProcessManager.IdGenerater("Voucher", CNETConstantes.CHECK_OUT_BILL_VOUCHER, generationType, LocalBuffer.LocalBuffer.CurrentDeviceConsigneeUnit.Value, false, LocalBuffer.LocalBuffer.CurrentDevice.Id);
+            string currentVoCode = UIProcessManager.IdGenerater("Voucher", POS_Settings.Voucher_Definition /*CNETConstantes.CHECK_OUT_BILL_VOUCHER*/, generationType, LocalBuffer.LocalBuffer.CurrentDeviceConsigneeUnit.Value, false, LocalBuffer.LocalBuffer.CurrentDevice.Id);
 
             if (!string.IsNullOrEmpty(currentVoCode))
             {
@@ -551,9 +546,9 @@ namespace ERP.EventManagement
         int _activityDefCheckout { get; set; }
         int? _objectstateCheckout { get; set; }
 
-        private bool CheckWorkflow()
+        private bool CheckWorkflow( int definition)
         {
-            ActivityDefinitionDTO _checkoutSalesWorkFlow = UIProcessManager.GetActivityDefinitionBydescriptionandreference(CNETConstantes.LU_ACTIVITY_DEFINATION_PREPARED, CNETConstantes.CHECK_OUT_BILL_VOUCHER).FirstOrDefault();
+            ActivityDefinitionDTO _checkoutSalesWorkFlow = UIProcessManager.GetActivityDefinitionBydescriptionandreference(CNETConstantes.LU_ACTIVITY_DEFINATION_PREPARED, definition /* CNETConstantes.CHECK_OUT_BILL_VOUCHER*/).FirstOrDefault();
 
 
             if (_checkoutSalesWorkFlow != null)
@@ -602,7 +597,7 @@ namespace ERP.EventManagement
         {
             VoucherDTO voucher = new VoucherDTO();
             voucher.Code = teVoucherNo.Text;
-            voucher.Definition = CNETConstantes.CHECK_OUT_BILL_VOUCHER;
+            voucher.Definition = POS_Settings.Voucher_Definition;// CNETConstantes.CHECK_OUT_BILL_VOUCHER;
             voucher.Consignee1 = null;
             voucher.IssuedDate = CurrentTime;
             voucher.Period = LocalBuffer.LocalBuffer.GetPeriodCode(CurrentTime);
@@ -764,36 +759,39 @@ namespace ERP.EventManagement
             if (view.SelectedIndex == 0)
             {
                 POS_Settings.Voucher_Definition = CNETConstantes.CASH_SALES;
+                EventVoucherSetting.GetCurrentVoucherSetting(CNETConstantes.CASH_SALES);
                 POS_Settings.Get_POS_Settings(LocalBuffer.LocalBuffer.ConfigurationBufferList);
-
-                teVoucherNo.Text = GetCurrentId(0);
+                
+                  teVoucherNo.Text = GetCurrentId(0);
                 if (string.IsNullOrEmpty(teVoucherNo.Text))
                 {
-                    MessageBox.Show("Unable to generate ID!", "ERROR");
+                    MessageBox.Show("Unable to generate ID for Cash Sales!", "ERROR",MessageBoxButtons.OK, MessageBoxIcon.Error);
                     bbiPrint.Enabled = false;
                 }
+              
                 lePayment.Properties.ReadOnly = false;
             }
             else
             {
                 POS_Settings.Voucher_Definition = CNETConstantes.CREDITSALES;
+                EventVoucherSetting.GetCurrentVoucherSetting(CNETConstantes.CREDITSALES);
                 POS_Settings.Get_POS_Settings(LocalBuffer.LocalBuffer.ConfigurationBufferList);
 
                 teVoucherNo.Text = GetCurrentId(0);
                 if (string.IsNullOrEmpty(teVoucherNo.Text))
                 {
-                    MessageBox.Show("Unable to generate ID!", "ERROR");
+                    MessageBox.Show("Unable to generate ID for Credit Sales!", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     bbiPrint.Enabled = false;
                 }
                 lePayment.EditValue = CNETConstantes.PAYMENTMETHODSCREDIT;
                 lePayment.Properties.ReadOnly = true;
             }
-
+           // CheckWorkflow(POS_Settings.Voucher_Definition);
             //get Setting Values
             GetVoucherSettingValues(POS_Settings.Voucher_Definition);
 
             //check workflow for the selected transactiontype
-            if (!CheckWorkflow())
+            if (!CheckWorkflow(POS_Settings.Voucher_Definition))
             {
                 bbiPrint.Enabled = false;
             }

@@ -9,6 +9,9 @@ using System.Diagnostics;
 using System.IO;
 using CNET_V7_Domain.Domain.ConsigneeSchema;
 using System.Globalization;
+using V7PassportOCR;
+using ERP.Attachement;
+using CNET_V7_Domain.Domain.SettingSchema; 
 
 namespace CNET.FrontOffice_V._7
 { 
@@ -21,16 +24,20 @@ namespace CNET.FrontOffice_V._7
         [STAThread]
         static void Main()
         {
-             
+
             if (!ReadLauncherConfigurations())
                 return;
             else
                 UpdateLauncherConfigurations();
-             
+
+
             PMSDataLogger.InitalizePMSDataLogger();
             PMSDataLogger.LogMessage("Program", "==================================================================");
             PMSDataLogger.LogMessage("Program", "Starting FrontOffice V.7");
 
+            //Image im = Image.FromFile(@"C:\\Users\\RND01\\AppData\\Local\\Temp\\WebFXScan\\IMG_101245937_00001.jpg");
+            //Analyze analyze = new Analyze(im);
+            //var data = analyze.PipeLineData;
             string BaseAddressValue = ReadConfigurationBaseAddress();
 
             if (string.IsNullOrEmpty(BaseAddressValue))
@@ -41,6 +48,12 @@ namespace CNET.FrontOffice_V._7
 
             API.Manager.HttpSinglton.BaseAddressValue = BaseAddressValue;
             Application.Run(new MainLogin());
+
+
+
+
+            //ERP_V7ErrorFixTool.LeaveVoucherLineItemReferenceMissing d = new ERP_V7ErrorFixTool.LeaveVoucherLineItemReferenceMissing();
+            //d.ShowDialog();
         }
 
         public static bool ReadLauncherConfigurations()

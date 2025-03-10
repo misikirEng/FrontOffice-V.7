@@ -192,7 +192,7 @@ namespace CNET.FrontOffice_V._7.HouseKeeping
         private void HKStatus_ValueChanged(object sender, EventArgs e)
         {
             string hkperson = "";
-            string hkvalue = hkStatusCombo.EditValue.ToString();
+            string hkvalue = hkStatusCombo.Text;
             string fostatus = foStatus.Text;
 
             if (numberCombo.Value.ToString() != "")
@@ -221,7 +221,7 @@ namespace CNET.FrontOffice_V._7.HouseKeeping
             }
             else
             {
-                hkvalue = hkStatusCombo.EditValue.ToString();
+                hkvalue = hkStatusCombo.Text;
 
             }
 
@@ -245,7 +245,7 @@ namespace CNET.FrontOffice_V._7.HouseKeeping
             }
             else
             {
-                hkvalue = hkStatusCombo.EditValue.ToString();
+                hkvalue = hkStatusCombo.Text.ToString();
             }
 
             fovalue = foStatus.Text;
@@ -255,40 +255,60 @@ namespace CNET.FrontOffice_V._7.HouseKeeping
                 hkperson = numberCombo.Value.ToString();
             }
             foperson = foPerson.Text;
-
+            /*
+              public const int Discrepancy_None = 244;
+        public const int Discrepancy_Person = 245;
+        public const int Discrepancy_Skip_Person = 246;
+        public const int Discrepancy_Skips = 247;
+        public const int Discrepancy_Sleep_Person = 248;
+        public const int Discrepancy_Sleeps = 249; */
             if (hkperson.Equals(foperson) && hkvalue.Equals(fovalue))
             {
                 discrepancyTextBox.Text = "None";
+                DiscrepancytypeId = CNETConstantes.Discrepancy_None;
             }
-            if (!hkperson.Equals(foperson) && (hkvalue.Equals("Vacant") && fovalue.Equals("Occupied")))
+            else if (!hkperson.Equals(foperson) && (hkvalue.Equals("Vacant") && fovalue.Equals("Occupied")))
             {
                 discrepancyTextBox.Text = "Skip/Person";
+                DiscrepancytypeId = CNETConstantes.Discrepancy_Skip_Person;
             }
-            if (!hkperson.Equals(foperson) && (hkvalue.Equals("Occupied") && fovalue.Equals("Vacant")))
+            else if (!hkperson.Equals(foperson) && (hkvalue.Equals("Occupied") && fovalue.Equals("Vacant")))
             {
                 discrepancyTextBox.Text = "Sleep/Person";
+                DiscrepancytypeId = CNETConstantes.Discrepancy_Sleep_Person;
             }
-            if ((fovalue.Equals("Vacant") & hkvalue.Equals("Occupied")) & hkperson.Equals(foperson))
+            else if ((fovalue.Equals("Vacant") & hkvalue.Equals("Occupied")) & hkperson.Equals(foperson))
             {
                 discrepancyTextBox.Text = "Sleep";
+                DiscrepancytypeId = CNETConstantes.Discrepancy_Sleeps;
             }
-            if ((fovalue.Equals("Occupied") & hkvalue.Equals("Vacant")) & hkperson.Equals(foperson))
+            else if ((fovalue.Equals("Occupied") & hkvalue.Equals("Vacant")) & hkperson.Equals(foperson))
             {
                 discrepancyTextBox.Text = "Skip";
+                DiscrepancytypeId = CNETConstantes.Discrepancy_Skips;
             }
-            if (fovalue.Equals(hkvalue) & !hkperson.Equals(foperson))
+            else if (fovalue.Equals(hkvalue) & !hkperson.Equals(foperson))
             {
                 discrepancyTextBox.Text = "Person";
+                DiscrepancytypeId = CNETConstantes.Discrepancy_Person;
             }
-            if (hkvalue.Equals("") & hkperson.Equals(foperson))
+            else if (hkvalue.Equals("") & hkperson.Equals(foperson))
             {
                 discrepancyTextBox.Text = "None";
+                DiscrepancytypeId = CNETConstantes.Discrepancy_None;
             }
-            if (hkvalue.Equals("") & !hkperson.Equals(foperson))
+            else if (hkvalue.Equals("") & !hkperson.Equals(foperson))
             {
                 discrepancyTextBox.Text = "Person";
+                DiscrepancytypeId = CNETConstantes.Discrepancy_Person;
+            }
+            else
+            {
+                discrepancyTextBox.Text = "None";
+                DiscrepancytypeId = CNETConstantes.Discrepancy_None;
             }
         }
+        int DiscrepancytypeId = CNETConstantes.Discrepancy_None;
 
         private void SaveDiscrepancy(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
@@ -318,7 +338,7 @@ namespace CNET.FrontOffice_V._7.HouseKeeping
                 int hkperson = Convert.ToInt32(numberCombo.Value);
                 int hkvalue = Convert.ToInt32(hkStatusCombo.EditValue);
 
-                LookupDTO discrepancyCode = LocalBuffer.LocalBuffer.LookUpBufferList.Where(x => x.Type.Contains("Discrepancy")).FirstOrDefault();
+                LookupDTO discrepancyCode = LocalBuffer.LocalBuffer.LookUpBufferList.FirstOrDefault(x => x.Id == DiscrepancytypeId);
 
                 //LookupDTO hkValueCode = LocalBuffer.LocalBuffer.LookUpBufferList.Where(x => x.Type.Contains("Front Office Staus")).FirstOrDefault();
 
@@ -326,8 +346,8 @@ namespace CNET.FrontOffice_V._7.HouseKeeping
 
 
 
-                disc.Description = discrepancyCode.Description;
-                disc.DiscrepancyType = discrepancyCode.Id;
+                disc.Description = discrepancyCode== null ?"None": discrepancyCode.Description;
+                disc.DiscrepancyType = discrepancyCode == null ? CNETConstantes.Discrepancy_None : DiscrepancytypeId;
 
                 disc.Date = t;
                 disc.Remark = rmark;

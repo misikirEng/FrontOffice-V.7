@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevExpress.Win.Design" Version="21.2.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CNET.API.Manager\API.Manager.csproj" />
+    <ProjectReference Include="..\ProcessManager\ProcessManager.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="CNET.Progress.Reporter">
+      <HintPath>..\..\..\..\..\..\CNET_V7_Domain\CNET.Progress.Reporter.dll</HintPath>
+    </Reference>
+    <Reference Include="CNET_V7_Domain">
+      <HintPath>..\..\..\..\..\..\CNET_V7_Domain\CNET_V7_Domain.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

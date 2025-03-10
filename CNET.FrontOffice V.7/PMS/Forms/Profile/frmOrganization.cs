@@ -29,6 +29,7 @@ using CNET_V7_Domain.Domain.ConsigneeSchema;
 using DevExpress.Mvvm.POCO;
 using CNET.Progress.Reporter;
 using CNET.FrontOffice_V._7.Group_Registration;
+using CNET.FrontOffice_V._7.Non_Navigatable_Modals;
 
 namespace CNET.FrontOffice_V._7.Forms
 {
@@ -1495,18 +1496,18 @@ namespace CNET.FrontOffice_V._7.Forms
         {
             if (!string.IsNullOrEmpty(teCorpId.Text))
             {
-                //var org = LocalBuffer.LocalBuffer.OrganizationBufferList.FirstOrDefault(o => o.code == teCorpId.Text);
-                //if (org == null)
-                //{
-                //    SystemMessage.ShowModalInfoMessage("Please Select or Save an organization first!", "ERROR");
-                //    return;
-                //}
+                var org = LocalBuffer.LocalBuffer.ConsigneeViewBufferList.FirstOrDefault(o => o.Code == teCorpId.Text);
+                if (org == null)
+                {
+                    SystemMessage.ShowModalInfoMessage("Please Select or Save an organization first!", "ERROR");
+                    return;
+                }
 
-                //frmAttachment _frmAttachment = new frmAttachment();
-                //_frmAttachment.IsFromProfile = true;
-                //_frmAttachment.ConsigneeId = org.code;
-                //_frmAttachment.IntType = CNETConstantes.CUSTOMERORG;
-                //_frmAttachment.ShowDialog();
+                frmAttachment _frmAttachment = new frmAttachment();
+                _frmAttachment.IsFromProfile = true;
+                _frmAttachment.ConsigneeId = org.Id;
+                _frmAttachment.IntType = CNETConstantes.CUSTOMER;
+                _frmAttachment.ShowDialog();
             }
             else
             {

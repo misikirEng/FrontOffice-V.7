@@ -2196,7 +2196,7 @@ namespace PMSReport
                     splitContainer1.Panel2Collapsed = true;
 
                     MemoryStream streamfile = null;
-                    bool Exist = FTPInterface.FTPAttachment.InitalizePMSFTPAttachment(LocalBuffer.LocalBuffer.CompanyConsigneeData.Tin);
+                    bool Exist = FTPInterface.FTPAttachment.InitalizeFTPAttachment(LocalBuffer.LocalBuffer.CompanyConsigneeData.Tin);
                     if (Exist)
                     {
                         FTPInterface.FTPAttachment.ORGUnitDefcode = SelectedHotelcode.ToString();
@@ -4834,8 +4834,8 @@ namespace PMSReport
              
 
                 allRooms = allRooms.OrderBy(r => r.Floor).ThenBy(r => r.roomNo).ToList();
-                int count = 0;
-                decimal rowCo = Math.Ceiling(Convert.ToDecimal(allRooms.Count / 6));
+                int count = 0; 
+                decimal rowCo = Math.Ceiling(Convert.ToDecimal(allRooms.Count) / 6);
                 int rowCount = Convert.ToInt32(rowCo);
                 foreach (var room in allRooms)
                 {

@@ -864,6 +864,33 @@ namespace ERP.EventManagement.Modals
 
                 bool isEdit = EventDTO == null ? false : true;
 
+                if(!isEdit)
+                {
+                    VoucherDTO vo = UIProcessManager.GetVoucherByCode(teEventNo.Text);
+                    if (vo != null)
+                    {
+                        isEdit = true;
+                        EventDTO = new EventHeaderDTO();
+                        EventDTO.Id = vo.Id;
+                        EventDTO.Code = vo.Code;
+                        if(_adEdited == null)
+                        {
+                            ActivityDefinitionDTO workFlow = UIProcessManager.GetActivityDefinitionBydescriptionandreference(CNETConstantes.LU_ACTIVITY_DEFINATION_Edit, CNETConstantes.EVENT_VOUCHER).FirstOrDefault();
+                            if (workFlow != null)
+                            {
+                                _adEdited = workFlow.Id;
+                            }
+                            else
+                            {
+                                XtraMessageBox.Show("Please define workflow of UPDATED for Event Voucher ", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+                        }
+
+                    }
+                }
+
+
                 DateTime? currentDate = GetCurrentTime();
                 if (currentDate == null)
                 {

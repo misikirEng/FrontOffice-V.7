@@ -35,22 +35,86 @@ namespace FTPInterface
         private static string ftpTransactionDirectory { get; set; }
         private static string ftpTransactionDefinitionDirectory { get; set; }
 
-        private static string FtpComanayProfileName = "/CompanyProfile/";
-        private static string FtpGslProfileName = "/GslProfile/27";
+        private static string FtpComanayProfileName = "/CompanyProfile/"; 
+        private static string FtpGslProfileName = "/GslProfile/";
         private static string FtpTransactionName = "/Transaction/";
         private static string FtpRommsName = "/Rooms/";
         private static string FtpPMSReport = "/Report/PMS Report";
 
-        public static bool InitalizePMSFTPAttachment(string TINno)
+        public static bool InitalizeFTPAttachment(string TINno)
         {
+            //return false;
             CompanyTINNo = TINno;
             ftpCompanyDirectory = String.Format("{0}{1}", FtpBaseUrl, CompanyTINNo);
+            string ftpCompanyTransactionDirectory = String.Format("{0}{1}", ftpCompanyDirectory, FtpTransactionName);
+            string ftpCompanyGSLDirectory = String.Format("{0}{1}", ftpCompanyDirectory, FtpGslProfileName);
+            string ftpCompanyprofileDirectory = String.Format("{0}{1}", ftpCompanyDirectory, FtpComanayProfileName);
             if (!CheckFTPDirectoryExist(ftpCompanyDirectory))
             {
+                CreateFTPDirectory(ftpCompanyDirectory);
+            }
+
+            if (!CheckFTPDirectoryExist(ftpCompanyDirectory))
+            {
+                MessageBox.Show("The FTP With " + CompanyTINNo + " Tin Number Don't have FTP Access Please Contact System Admin.");
                 return false;
             }
+
+            if (!CheckFTPDirectoryExist(ftpCompanyTransactionDirectory))
+            {
+                CreateFTPDirectory(ftpCompanyTransactionDirectory);
+            }
+            if (!CheckFTPDirectoryExist(ftpCompanyGSLDirectory))
+            {
+                CreateFTPDirectory(ftpCompanyGSLDirectory);
+            }
+            if (!CheckFTPDirectoryExist(ftpCompanyprofileDirectory))
+            {
+                CreateFTPDirectory(ftpCompanyprofileDirectory);
+            }
+
             return true;
         }
+        public static bool InitalizeFTPAttachment(string TINno, string OrganizationUnitDefCode, bool IsRoom = false, string RoomType = "")
+        {
+           // return false;
+            CompanyTINNo = TINno;
+            ORGUnitDefcode = OrganizationUnitDefCode;
+            AttachementISRoom = IsRoom;
+            RoomTypeCode = RoomType;
+            ftpCompanyDirectory = String.Format("{0}{1}", FtpBaseUrl, CompanyTINNo);
+            string ftpCompanyTransactionDirectory = String.Format("{0}{1}", ftpCompanyDirectory, FtpTransactionName);
+            string ftpCompanyGSLDirectory = String.Format("{0}{1}", ftpCompanyDirectory, FtpGslProfileName);
+            string ftpCompanyprofileDirectory = String.Format("{0}{1}", ftpCompanyDirectory, FtpComanayProfileName);
+
+            if (!CheckFTPDirectoryExist(ftpCompanyDirectory))
+            {
+                CreateFTPDirectory(ftpCompanyDirectory);
+            }
+
+            if (!CheckFTPDirectoryExist(ftpCompanyDirectory))
+            {
+                MessageBox.Show("The FTP With " + CompanyTINNo + " Tin Number Don't have FTP Access Please Contact System Admin.");
+                return false;
+            }
+            if (!CheckFTPDirectoryExist(ftpCompanyTransactionDirectory))
+            {
+                CreateFTPDirectory(ftpCompanyTransactionDirectory);
+            }
+            if (!CheckFTPDirectoryExist(ftpCompanyGSLDirectory))
+            {
+                CreateFTPDirectory(ftpCompanyGSLDirectory);
+            }
+            if (!CheckFTPDirectoryExist(ftpCompanyprofileDirectory))
+            {
+                CreateFTPDirectory(ftpCompanyprofileDirectory);
+            }
+
+            return true;
+        }
+
+
+   
 
         public static string SendTransactionAttachement(int DefintionId, string FileLocation, int voucherid)
         {
@@ -67,34 +131,65 @@ namespace FTPInterface
 
             return ftpfilelocation;
         }
-        public static string SendPMSAttachement(string Guestcode, string FileLocation)
+        public static string SendConsigneePMSAttachement(int GslType, string Guestcode, string FileLocation)
         {
             // string ImageName = Path.GetFileName(ImageLocation);
             FileInfo fi = new FileInfo(FileLocation);
-            ftpGuestDirectory = String.Format("{0}{1}{2}/", FtpBaseUrl, CompanyTINNo, FtpGslProfileName);
-            ftpfilelocation = String.Format("{0}{1}{2}/{3}{4}", FtpBaseUrl, CompanyTINNo, FtpGslProfileName, Guestcode, fi.Extension);
+            ftpGuestDirectory = String.Format("{0}{1}{2}/", FtpBaseUrl, CompanyTINNo, FtpGslProfileName + GslType);
+            ftpfilelocation = String.Format("{0}{1}{2}/{3}{4}", FtpBaseUrl, CompanyTINNo, FtpGslProfileName + GslType, Guestcode, fi.Extension);
             if (CreateFTPDirectory(ftpGuestDirectory) && FTPFileDontExist(ftpfilelocation))
             {
                 UpLoadFile(ftpfilelocation, FileLocation);
             }
             return ftpfilelocation;
         }
-        public static string SendPMSGuestImageAttachement(string Guestcode, System.Drawing.Image Image)
+
+        public static string SendGSlFileAttachement(int GSLId, string FileLocation, int voucherid)
+        {
+            // string ImageName = Path.GetFileName(ImageLocation);
+            FileInfo fi = new FileInfo(FileLocation);
+            ftpTransactionDirectory = String.Format("{0}{1}{2}", FtpBaseUrl, CompanyTINNo, FtpGslProfileName);
+            ftpTransactionDefinitionDirectory = String.Format("{0}{1}{2}{3}", FtpBaseUrl, CompanyTINNo, FtpGslProfileName, GSLId);
+            ftpfilelocation = String.Format("{0}{1}{2}{3}/{4}", FtpBaseUrl, CompanyTINNo, FtpGslProfileName, GSLId, fi.Name);
+
+            if (CreateFTPDirectory(ftpTransactionDirectory) && CreateFTPDirectory(ftpTransactionDefinitionDirectory) && FTPFileDontExist(ftpfilelocation))
+            {
+                UpLoadFile(ftpfilelocation, FileLocation);
+            }
+
+            return ftpfilelocation;
+        }
+
+        public static string SendConsigneeImageAttachement(int GslType, string Guestcode, System.Drawing.Image Image)
         {
             ImageFormat format = ImageFormat.Png;
             MemoryStream ms = new MemoryStream();
             Image.Save(ms, ImageFormat.Png);
 
             // string ImageName = Path.GetFileName(ImageLocation); 
-            ftpGuestDirectory = String.Format("{0}{1}{2}/", FtpBaseUrl, CompanyTINNo, FtpGslProfileName);
-            ftpfilelocation = String.Format("{0}{1}{2}/{3}{4}", FtpBaseUrl, CompanyTINNo, FtpGslProfileName, Guestcode, Guestcode+ ".jpg" );
+            ftpGuestDirectory = String.Format("{0}{1}{2}/", FtpBaseUrl, CompanyTINNo, FtpGslProfileName + GslType);
+            ftpfilelocation = String.Format("{0}{1}{2}/{3}{4}", FtpBaseUrl, CompanyTINNo, FtpGslProfileName + GslType, Guestcode, Guestcode+ ".jpg" );
             if (CreateFTPDirectory(ftpGuestDirectory) && FTPFileDontExist(ftpfilelocation))
             {
                 UpLoadFile(ftpfilelocation, ms);
             }
             return ftpfilelocation;
         }
+        public static string SendArticleImageAttachement(int GslType, string Guestcode, System.Drawing.Image Image)
+        {
+            ImageFormat format = ImageFormat.Png;
+            MemoryStream ms = new MemoryStream();
+            Image.Save(ms, ImageFormat.Png);
 
+            // string ImageName = Path.GetFileName(ImageLocation); 
+            ftpGuestDirectory = String.Format("{0}{1}{2}/", FtpBaseUrl, CompanyTINNo, FtpGslProfileName + GslType);
+            ftpfilelocation = String.Format("{0}{1}{2}/{3}{4}", FtpBaseUrl, CompanyTINNo, FtpGslProfileName + GslType, Guestcode, Guestcode + ".jpg");
+            if (CreateFTPDirectory(ftpGuestDirectory) && FTPFileDontExist(ftpfilelocation))
+            {
+                UpLoadFile(ftpfilelocation, ms);
+            }
+            return ftpfilelocation;
+        }
 
 
         public static string SendPMSReportAttachement(string FileLocation, DateTime Date)
@@ -173,20 +268,7 @@ namespace FTPInterface
             }
         }
 
-        public static bool InitalizeFTPAttachment(string TINno, string OrganizationUnitDefCode, bool IsRoom, string RoomType)
-        {
-            CompanyTINNo = TINno;
-            ORGUnitDefcode = OrganizationUnitDefCode;
-            AttachementISRoom = IsRoom;
-            RoomTypeCode = RoomType;
-            ftpCompanyDirectory = String.Format("{0}{1}", FtpBaseUrl, CompanyTINNo);
-            if (!CheckFTPDirectoryExist(ftpCompanyDirectory))
-            {
-                MessageBox.Show("The FTP With " + CompanyTINNo + " Tin Number Don't have FTP Access Please Contact System Admin.");
-                return false;
-            }
-            return true;
-        }
+       
 
         //public string ftpfilelocation = "ftp://196.191.244.133/0000000001/CompanyProfile/OUD0000050/banner/Test2.jpg";
         //public string ftpBranchDirectory = "ftp://196.191.244.133/0000000001/CompanyProfile/banner/OUD0000050/";
@@ -236,13 +318,12 @@ namespace FTPInterface
             {
 
                 FtpWebRequest downloadRequest = (FtpWebRequest)WebRequest.Create(ftpFilePath);
-                //downloadRequest.UsePassive = true;
+               // downloadRequest.UsePassive = false;
                 downloadRequest.UseBinary = true;
                 downloadRequest.Method = WebRequestMethods.Ftp.DownloadFile;
                 downloadRequest.Credentials = new NetworkCredential(FTPUserName, FTPPassWord);
                 downloadRequest.Timeout = 30000;
                 downloadRequest.ReadWriteTimeout = 30000;
-                //downloadRequest.UsePassive = false;
                 //  downloadRequest.Timeout = System.Threading.Timeout.Infinite;
                 //  downloadRequest.ReadWriteTimeout = System.Threading.Timeout.Infinite;
 
@@ -255,12 +336,18 @@ namespace FTPInterface
             {
                 return null;
             }
-        }
-        public static MemoryStream GetFileStreamFromFTP(string vouchercode,int definition)
+        }  public static MemoryStream GetFileStreamFromFTP(string vouchercode,int definition)
         {
 
             string FTPImageLocation = String.Format("{0}{1}{2}/{3}/{4}/{5}", FtpBaseUrl, CompanyTINNo, FtpTransactionName, ORGUnitDefcode, definition, vouchercode + ".pdf");
 
+            if (!FTPFileDontExist(FTPImageLocation))
+                return DownloadFileFromFTP(FTPImageLocation);
+            else
+                return null;
+        }
+        public static MemoryStream GetFileStreamFromFTP(string FTPImageLocation)
+        { 
             if (!FTPFileDontExist(FTPImageLocation))
                 return DownloadFileFromFTP(FTPImageLocation);
             else
@@ -293,13 +380,12 @@ namespace FTPInterface
             {
 
                 FtpWebRequest downloadRequest = (FtpWebRequest)WebRequest.Create(ftpFilePath);
-                //downloadRequest.UsePassive = true;
+                //downloadRequest.UsePassive = false;
                 downloadRequest.UseBinary = true;
                 downloadRequest.Method = WebRequestMethods.Ftp.DownloadFile;
                 downloadRequest.Credentials = new NetworkCredential(FTPUserName, FTPPassWord);
                 downloadRequest.Timeout = System.Threading.Timeout.Infinite;
                 downloadRequest.ReadWriteTimeout = System.Threading.Timeout.Infinite;
-                //downloadRequest.UsePassive = false;
                 //downloadRequest.Timeout = 30000;
                 //downloadRequest.ReadWriteTimeout = 30000;
 
@@ -323,7 +409,6 @@ namespace FTPInterface
 
                 byte[] buffer = new byte[10240];
                 FtpWebRequest downloadRequest = (FtpWebRequest)WebRequest.Create(ftpFilePath);
-                //downloadRequest.UsePassive = true;
                 downloadRequest.UseBinary = true;
                 downloadRequest.Method = WebRequestMethods.Ftp.DownloadFile;
                 downloadRequest.Credentials = new NetworkCredential(FTPUserName, FTPPassWord);
@@ -429,7 +514,7 @@ namespace FTPInterface
                 var request = (FtpWebRequest)WebRequest.Create(ftpfile);
                 request.Credentials = new NetworkCredential(FTPUserName, FTPPassWord);
                 request.Method = WebRequestMethods.Ftp.GetFileSize;
-                //request.UsePassive = false;
+               // request.UsePassive = false;
                 //request.Timeout = 30000; 
                 //request.ReadWriteTimeout = 30000;
 
@@ -470,10 +555,9 @@ namespace FTPInterface
                 FtpWebRequest requestDir = (FtpWebRequest)FtpWebRequest.Create(new Uri(directory));
                 requestDir.Method = WebRequestMethods.Ftp.MakeDirectory;
                 requestDir.Credentials = new NetworkCredential(FTPUserName, FTPPassWord);
-                //requestDir.UsePassive = true;
+                //requestDir.UsePassive = false;
                 requestDir.UseBinary = true;
                 //requestDir.KeepAlive = false;
-                ////requestDir.UsePassive = false;
                 //requestDir.Timeout = 30000;
                 //requestDir.ReadWriteTimeout = 30000;
 
@@ -507,13 +591,12 @@ namespace FTPInterface
             {
 
                 FtpWebRequest downloadRequest = (FtpWebRequest)WebRequest.Create(ftpFilePath);
-                //downloadRequest.UsePassive = true;
                 downloadRequest.UseBinary = true;
                 downloadRequest.Method = WebRequestMethods.Ftp.DeleteFile;
                 downloadRequest.Credentials = new NetworkCredential(FTPUserName, FTPPassWord);
                 downloadRequest.Timeout = System.Threading.Timeout.Infinite;
                 downloadRequest.ReadWriteTimeout = System.Threading.Timeout.Infinite;
-                //downloadRequest.UsePassive = false;
+               // downloadRequest.UsePassive = false;
                 //downloadRequest.Timeout = 30000;
                 //downloadRequest.ReadWriteTimeout = 30000;
 

@@ -29,215 +29,208 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAttachment));
-            this.pnl_attachment = new DevExpress.XtraEditors.PanelControl();
-            this.layoutControl1 = new DevExpress.XtraLayout.LayoutControl();
-            this.ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
-            this.bbiNew = new DevExpress.XtraBars.BarButtonItem();
-            this.bbiDelete = new DevExpress.XtraBars.BarButtonItem();
-            this.bbiClose = new DevExpress.XtraBars.BarButtonItem();
-            this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControl2 = new DevExpress.XtraLayout.LayoutControl();
-            this.layoutControlGroup2 = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
-            ((System.ComponentModel.ISupportInitialize)(this.pnl_attachment)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).BeginInit();
-            this.layoutControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControl2)).BeginInit();
-            this.layoutControl2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
-            this.SuspendLayout();
+            pnl_attachment = new DevExpress.XtraEditors.PanelControl();
+            layoutControl1 = new DevExpress.XtraLayout.LayoutControl();
+            ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
+            bbiNew = new DevExpress.XtraBars.BarButtonItem();
+            bbiDelete = new DevExpress.XtraBars.BarButtonItem();
+            bbiClose = new DevExpress.XtraBars.BarButtonItem();
+            ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
+            layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
+            layoutControl2 = new DevExpress.XtraLayout.LayoutControl();
+            layoutControlGroup2 = new DevExpress.XtraLayout.LayoutControlGroup();
+            layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
+            ((System.ComponentModel.ISupportInitialize)pnl_attachment).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)layoutControl1).BeginInit();
+            layoutControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)ribbonControl1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)layoutControlGroup1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)layoutControlItem2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)layoutControl2).BeginInit();
+            layoutControl2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)layoutControlGroup2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)layoutControlItem1).BeginInit();
+            SuspendLayout();
             // 
             // pnl_attachment
             // 
-            this.pnl_attachment.Location = new System.Drawing.Point(12, 12);
-            this.pnl_attachment.Name = "pnl_attachment";
-            this.pnl_attachment.Size = new System.Drawing.Size(751, 363);
-            this.pnl_attachment.TabIndex = 0;
+            pnl_attachment.Location = new Point(12, 12);
+            pnl_attachment.Name = "pnl_attachment";
+            pnl_attachment.Size = new Size(751, 354);
+            pnl_attachment.TabIndex = 0;
             // 
             // layoutControl1
             // 
-            this.layoutControl1.Controls.Add(this.ribbonControl1);
-            this.layoutControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.layoutControl1.Location = new System.Drawing.Point(0, 0);
-            this.layoutControl1.Name = "layoutControl1";
-            this.layoutControl1.Root = this.layoutControlGroup1;
-            this.layoutControl1.Size = new System.Drawing.Size(775, 78);
-            this.layoutControl1.TabIndex = 1;
-            this.layoutControl1.Text = "layoutControl1";
+            layoutControl1.Controls.Add(ribbonControl1);
+            layoutControl1.Dock = DockStyle.Top;
+            layoutControl1.Location = new Point(0, 0);
+            layoutControl1.Name = "layoutControl1";
+            layoutControl1.Root = layoutControlGroup1;
+            layoutControl1.Size = new Size(775, 87);
+            layoutControl1.TabIndex = 1;
+            layoutControl1.Text = "layoutControl1";
             // 
             // ribbonControl1
             // 
-            this.ribbonControl1.Dock = System.Windows.Forms.DockStyle.None;
-            this.ribbonControl1.ExpandCollapseItem.Id = 0;
-            this.ribbonControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
-            this.ribbonControl1.ExpandCollapseItem,
-            this.bbiNew,
-            this.bbiDelete,
-            this.bbiClose});
-            this.ribbonControl1.Location = new System.Drawing.Point(12, 12);
-            this.ribbonControl1.MaxItemId = 4;
-            this.ribbonControl1.Name = "ribbonControl1";
-            this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
-            this.ribbonPage1});
-            this.ribbonControl1.ShowCategoryInCaption = false;
-            this.ribbonControl1.ShowExpandCollapseButton = DevExpress.Utils.DefaultBoolean.False;
-            this.ribbonControl1.ShowFullScreenButton = DevExpress.Utils.DefaultBoolean.False;
-            this.ribbonControl1.ShowPageHeadersMode = DevExpress.XtraBars.Ribbon.ShowPageHeadersMode.Hide;
-            this.ribbonControl1.ShowToolbarCustomizeItem = false;
-            this.ribbonControl1.Size = new System.Drawing.Size(751, 96);
-            this.ribbonControl1.Toolbar.ShowCustomizeItem = false;
-            this.ribbonControl1.ToolbarLocation = DevExpress.XtraBars.Ribbon.RibbonQuickAccessToolbarLocation.Hidden;
+            ribbonControl1.Dock = DockStyle.None;
+            ribbonControl1.ExpandCollapseItem.Id = 0;
+            ribbonControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] { ribbonControl1.ExpandCollapseItem, bbiNew, bbiDelete, bbiClose, ribbonControl1.SearchEditItem });
+            ribbonControl1.Location = new Point(2, 2);
+            ribbonControl1.MaxItemId = 4;
+            ribbonControl1.Name = "ribbonControl1";
+            ribbonControl1.OptionsPageCategories.ShowCaptions = false;
+            ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] { ribbonPage1 });
+            ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.MacOffice;
+            ribbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.False;
+            ribbonControl1.ShowDisplayOptionsMenuButton = DevExpress.Utils.DefaultBoolean.False;
+            ribbonControl1.ShowExpandCollapseButton = DevExpress.Utils.DefaultBoolean.False;
+            ribbonControl1.ShowMoreCommandsButton = DevExpress.Utils.DefaultBoolean.False;
+            ribbonControl1.ShowPageHeadersInFormCaption = DevExpress.Utils.DefaultBoolean.False;
+            ribbonControl1.ShowPageHeadersMode = DevExpress.XtraBars.Ribbon.ShowPageHeadersMode.Hide;
+            ribbonControl1.ShowQatLocationSelector = false;
+            ribbonControl1.ShowToolbarCustomizeItem = false;
+            ribbonControl1.Size = new Size(771, 83);
+            ribbonControl1.Toolbar.ShowCustomizeItem = false;
+            ribbonControl1.ToolbarLocation = DevExpress.XtraBars.Ribbon.RibbonQuickAccessToolbarLocation.Hidden;
+            ribbonControl1.TransparentEditorsMode = DevExpress.Utils.DefaultBoolean.False;
             // 
             // bbiNew
             // 
-            this.bbiNew.Caption = "New";
-            this.bbiNew.CategoryGuid = new System.Guid("6ffddb2b-9015-4d97-a4c1-91613e0ef537");
-            this.bbiNew.Glyph = ((System.Drawing.Image)(resources.GetObject("bbiNew.Glyph")));
-            this.bbiNew.Id = 1;
-            this.bbiNew.LargeGlyph = ((System.Drawing.Image)(resources.GetObject("bbiNew.LargeGlyph")));
-            this.bbiNew.Name = "bbiNew";
-            this.bbiNew.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiNew_ItemClick);
+            bbiNew.Caption = "New";
+            bbiNew.CategoryGuid = new Guid("6ffddb2b-9015-4d97-a4c1-91613e0ef537");
+            bbiNew.Id = 1;
+            bbiNew.ImageOptions.Image = (Image)resources.GetObject("bbiNew.ImageOptions.Image");
+            bbiNew.ImageOptions.LargeImage = (Image)resources.GetObject("bbiNew.ImageOptions.LargeImage");
+            bbiNew.Name = "bbiNew";
+            bbiNew.ItemClick += bbiNew_ItemClick;
             // 
             // bbiDelete
             // 
-            this.bbiDelete.Caption = "Delete";
-            this.bbiDelete.CategoryGuid = new System.Guid("6ffddb2b-9015-4d97-a4c1-91613e0ef537");
-            this.bbiDelete.Glyph = ((System.Drawing.Image)(resources.GetObject("bbiDelete.Glyph")));
-            this.bbiDelete.Id = 2;
-            this.bbiDelete.LargeGlyph = ((System.Drawing.Image)(resources.GetObject("bbiDelete.LargeGlyph")));
-            this.bbiDelete.Name = "bbiDelete";
-            this.bbiDelete.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiDelete_ItemClick);
+            bbiDelete.Caption = "Delete";
+            bbiDelete.CategoryGuid = new Guid("6ffddb2b-9015-4d97-a4c1-91613e0ef537");
+            bbiDelete.Id = 2;
+            bbiDelete.ImageOptions.Image = (Image)resources.GetObject("bbiDelete.ImageOptions.Image");
+            bbiDelete.ImageOptions.LargeImage = (Image)resources.GetObject("bbiDelete.ImageOptions.LargeImage");
+            bbiDelete.Name = "bbiDelete";
+            bbiDelete.ItemClick += bbiDelete_ItemClick;
             // 
             // bbiClose
             // 
-            this.bbiClose.Caption = "Close";
-            this.bbiClose.CategoryGuid = new System.Guid("6ffddb2b-9015-4d97-a4c1-91613e0ef537");
-            this.bbiClose.Glyph = ((System.Drawing.Image)(resources.GetObject("bbiClose.Glyph")));
-            this.bbiClose.Id = 3;
-            this.bbiClose.LargeGlyph = ((System.Drawing.Image)(resources.GetObject("bbiClose.LargeGlyph")));
-            this.bbiClose.Name = "bbiClose";
-            this.bbiClose.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiClose_ItemClick);
+            bbiClose.Caption = "Close";
+            bbiClose.CategoryGuid = new Guid("6ffddb2b-9015-4d97-a4c1-91613e0ef537");
+            bbiClose.Id = 3;
+            bbiClose.ImageOptions.Image = (Image)resources.GetObject("bbiClose.ImageOptions.Image");
+            bbiClose.ImageOptions.LargeImage = (Image)resources.GetObject("bbiClose.ImageOptions.LargeImage");
+            bbiClose.Name = "bbiClose";
+            bbiClose.ItemClick += bbiClose_ItemClick;
             // 
             // ribbonPage1
             // 
-            this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
-            this.ribbonPageGroup1,
-            this.ribbonPageGroup2,
-            this.ribbonPageGroup3});
-            this.ribbonPage1.Name = "ribbonPage1";
-            this.ribbonPage1.Text = "ribbonPage1";
+            ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] { ribbonPageGroup1, ribbonPageGroup2, ribbonPageGroup3 });
+            ribbonPage1.Name = "ribbonPage1";
+            ribbonPage1.Text = "ribbonPage1";
             // 
             // ribbonPageGroup1
             // 
-            this.ribbonPageGroup1.ItemLinks.Add(this.bbiNew);
-            this.ribbonPageGroup1.Name = "ribbonPageGroup1";
-            this.ribbonPageGroup1.ShowCaptionButton = false;
+            ribbonPageGroup1.CaptionButtonVisible = DevExpress.Utils.DefaultBoolean.False;
+            ribbonPageGroup1.ItemLinks.Add(bbiNew);
+            ribbonPageGroup1.Name = "ribbonPageGroup1";
             // 
             // ribbonPageGroup2
             // 
-            this.ribbonPageGroup2.ItemLinks.Add(this.bbiDelete);
-            this.ribbonPageGroup2.Name = "ribbonPageGroup2";
-            this.ribbonPageGroup2.ShowCaptionButton = false;
+            ribbonPageGroup2.CaptionButtonVisible = DevExpress.Utils.DefaultBoolean.False;
+            ribbonPageGroup2.ItemLinks.Add(bbiDelete);
+            ribbonPageGroup2.Name = "ribbonPageGroup2";
             // 
             // ribbonPageGroup3
             // 
-            this.ribbonPageGroup3.ItemLinks.Add(this.bbiClose);
-            this.ribbonPageGroup3.Name = "ribbonPageGroup3";
-            this.ribbonPageGroup3.ShowCaptionButton = false;
+            ribbonPageGroup3.CaptionButtonVisible = DevExpress.Utils.DefaultBoolean.False;
+            ribbonPageGroup3.ItemLinks.Add(bbiClose);
+            ribbonPageGroup3.Name = "ribbonPageGroup3";
             // 
             // layoutControlGroup1
             // 
-            this.layoutControlGroup1.CustomizationFormText = "layoutControlGroup1";
-            this.layoutControlGroup1.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
-            this.layoutControlGroup1.GroupBordersVisible = false;
-            this.layoutControlGroup1.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItem2});
-            this.layoutControlGroup1.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlGroup1.Name = "layoutControlGroup1";
-            this.layoutControlGroup1.Size = new System.Drawing.Size(775, 78);
-            this.layoutControlGroup1.Text = "layoutControlGroup1";
-            this.layoutControlGroup1.TextVisible = false;
+            layoutControlGroup1.CustomizationFormText = "layoutControlGroup1";
+            layoutControlGroup1.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
+            layoutControlGroup1.GroupBordersVisible = false;
+            layoutControlGroup1.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] { layoutControlItem2 });
+            layoutControlGroup1.Name = "layoutControlGroup1";
+            layoutControlGroup1.Padding = new DevExpress.XtraLayout.Utils.Padding(0, 0, 0, 0);
+            layoutControlGroup1.Size = new Size(775, 87);
+            layoutControlGroup1.TextVisible = false;
             // 
             // layoutControlItem2
             // 
-            this.layoutControlItem2.Control = this.ribbonControl1;
-            this.layoutControlItem2.CustomizationFormText = "layoutControlItem2";
-            this.layoutControlItem2.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlItem2.Name = "layoutControlItem2";
-            this.layoutControlItem2.Size = new System.Drawing.Size(755, 58);
-            this.layoutControlItem2.Text = "layoutControlItem2";
-            this.layoutControlItem2.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItem2.TextToControlDistance = 0;
-            this.layoutControlItem2.TextVisible = false;
+            layoutControlItem2.Control = ribbonControl1;
+            layoutControlItem2.CustomizationFormText = "layoutControlItem2";
+            layoutControlItem2.Location = new Point(0, 0);
+            layoutControlItem2.MaxSize = new Size(0, 87);
+            layoutControlItem2.MinSize = new Size(209, 87);
+            layoutControlItem2.Name = "layoutControlItem2";
+            layoutControlItem2.Size = new Size(775, 87);
+            layoutControlItem2.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
+            layoutControlItem2.TextSize = new Size(0, 0);
+            layoutControlItem2.TextVisible = false;
             // 
             // layoutControl2
             // 
-            this.layoutControl2.Controls.Add(this.pnl_attachment);
-            this.layoutControl2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.layoutControl2.Location = new System.Drawing.Point(0, 78);
-            this.layoutControl2.Name = "layoutControl2";
-            this.layoutControl2.Root = this.layoutControlGroup2;
-            this.layoutControl2.Size = new System.Drawing.Size(775, 387);
-            this.layoutControl2.TabIndex = 2;
-            this.layoutControl2.Text = "layoutControl2";
+            layoutControl2.Controls.Add(pnl_attachment);
+            layoutControl2.Dock = DockStyle.Fill;
+            layoutControl2.Location = new Point(0, 87);
+            layoutControl2.Name = "layoutControl2";
+            layoutControl2.Root = layoutControlGroup2;
+            layoutControl2.Size = new Size(775, 378);
+            layoutControl2.TabIndex = 2;
+            layoutControl2.Text = "layoutControl2";
             // 
             // layoutControlGroup2
             // 
-            this.layoutControlGroup2.CustomizationFormText = "layoutControlGroup2";
-            this.layoutControlGroup2.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
-            this.layoutControlGroup2.GroupBordersVisible = false;
-            this.layoutControlGroup2.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItem1});
-            this.layoutControlGroup2.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlGroup2.Name = "layoutControlGroup2";
-            this.layoutControlGroup2.Size = new System.Drawing.Size(775, 387);
-            this.layoutControlGroup2.Text = "layoutControlGroup2";
-            this.layoutControlGroup2.TextVisible = false;
+            layoutControlGroup2.CustomizationFormText = "layoutControlGroup2";
+            layoutControlGroup2.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
+            layoutControlGroup2.GroupBordersVisible = false;
+            layoutControlGroup2.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] { layoutControlItem1 });
+            layoutControlGroup2.Name = "layoutControlGroup2";
+            layoutControlGroup2.Size = new Size(775, 378);
+            layoutControlGroup2.TextVisible = false;
             // 
             // layoutControlItem1
             // 
-            this.layoutControlItem1.Control = this.pnl_attachment;
-            this.layoutControlItem1.CustomizationFormText = "layoutControlItem1";
-            this.layoutControlItem1.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlItem1.Name = "layoutControlItem1";
-            this.layoutControlItem1.Size = new System.Drawing.Size(755, 367);
-            this.layoutControlItem1.Text = "layoutControlItem1";
-            this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItem1.TextToControlDistance = 0;
-            this.layoutControlItem1.TextVisible = false;
+            layoutControlItem1.Control = pnl_attachment;
+            layoutControlItem1.CustomizationFormText = "layoutControlItem1";
+            layoutControlItem1.Location = new Point(0, 0);
+            layoutControlItem1.Name = "layoutControlItem1";
+            layoutControlItem1.Size = new Size(755, 358);
+            layoutControlItem1.TextSize = new Size(0, 0);
+            layoutControlItem1.TextVisible = false;
             // 
             // frmAttachment
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(775, 465);
-            this.Controls.Add(this.layoutControl2);
-            this.Controls.Add(this.layoutControl1);
-            this.Name = "frmAttachment";
-            this.ShowIcon = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Attachments";
-            this.Load += new System.EventHandler(this.frmAttachment_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.pnl_attachment)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).EndInit();
-            this.layoutControl1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControl2)).EndInit();
-            this.layoutControl2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(6F, 13F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(775, 465);
+            Controls.Add(layoutControl2);
+            Controls.Add(layoutControl1);
+            IconOptions.ShowIcon = false;
+            Name = "frmAttachment";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Attachments";
+            Load += frmAttachment_Load;
+            ((System.ComponentModel.ISupportInitialize)pnl_attachment).EndInit();
+            ((System.ComponentModel.ISupportInitialize)layoutControl1).EndInit();
+            layoutControl1.ResumeLayout(false);
+            layoutControl1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)ribbonControl1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)layoutControlGroup1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)layoutControlItem2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)layoutControl2).EndInit();
+            layoutControl2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)layoutControlGroup2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)layoutControlItem1).EndInit();
+            ResumeLayout(false);
 
         }
 

@@ -250,6 +250,7 @@ namespace ProcessManager
         //System Constant Passport Scanner Type
         public const string WINTONE_PASSPORT_SCANNER = "WINTONE-PSPR1000";
         public const string ARH_PASSPORT_SCANNER = "ARH-PRMC";
+        public const string XMINI_PASSPORT_SCANNER = "X-Mini";
         public const string CNET_FLATBED_SCANNER = "CNET Standard Scanner";
 
 
@@ -528,5 +529,38 @@ namespace ProcessManager
         public const string VALUE_RULE_ALTERNATES = "Alternative";
         #endregion
 
+
+        public const int Discrepancy_None = 244;
+        public const int Discrepancy_Person = 245;
+        public const int Discrepancy_Skip_Person = 246;
+        public const int Discrepancy_Skips = 247;
+        public const int Discrepancy_Sleep_Person = 248;
+        public const int Discrepancy_Sleeps = 249;
+
+        public const int ATTACHMENT_TYPE_PPTX = 1464;
+        public const int ATTACHMENT_TYPE_PPT = 1465;
+        public const int ATTACHMENT_TYPE_PDF = 1463;
+        public const int ATTACHMENT_TYPE_CSV = 1455;
+        public const int ATTACHMENT_TYPE_XLSX = 1457;
+        public const int ATTACHMENT_TYPE_XLS = 1458;
+        public const int ATTACHMENT_TYPE_DOC = 1459;
+        public const int ATTACHMENT_TYPE_DOCX = 1460;
+        public const int ATTACHMENT_TYPE_EJ = 1456;
+        public const int ATTACHMENT_TYPE_TEXT = 1466;
+        public const int ATTACHMENT_TYPE_AUDIO = 1454;
+        public const int ATTACHMENT_TYPE_VIDEO = 1453;
+        public const int ATTACHMENT_TYPE_PICTURE = 1462;
+
+
+
+        public const int ATTACHMENT_CATAGORY_PERSONALPHOTO = 1447;
+        public const int ATTACHMENT_CATAGORY_PASSPORT = 1446;
+        public const int ATTACHMENT_CATAGORY_COMPANYLOGO = 1441;
+        public const int ATTACHMENT_CATAGORY_REFERENCEDOCUMENTS = 1451;
+        public const int ATTACHMENT_CATAGORY_CERTIFICATE = 1440;
+        public const int ATTACHMENT_CATAGORY_LICENSE = 1444;
+        public const int ATTACHMENT_CATAGORY_PICTURE = 1448;
+        public const int ATTACHMENT_CATAGORY_CATALOGUE = 1439;
+        public const int ATTACHMENT_CATAGORY_MANUAL = 1445; 
     }
 }

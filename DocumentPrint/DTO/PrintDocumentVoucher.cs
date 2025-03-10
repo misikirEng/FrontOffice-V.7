@@ -1157,6 +1157,7 @@ namespace DocumentPrint.DTO
             var systemConstantBuffer = DocumentPrintSetting.SystemConstantList;
             var branches = DocumentPrintSetting.CompanyBranchList;
             #endregion
+
             #region companyInformation
             ConsigneeDTO rOrganization = DocumentPrintSetting.CompanyConsigneeDTO;// await _sharedHelpers.GetCompany();
             voucherPrint.companyName = rOrganization?.FirstName;
@@ -1231,6 +1232,7 @@ namespace DocumentPrint.DTO
                 }
             }
             #endregion
+
             #region voucher Information and Voucher values
             if (DateFormat.ToLower() == "longdate")
             {
@@ -1347,6 +1349,7 @@ namespace DocumentPrint.DTO
             voucherPrint.isVoid = NonListDataSource.IsVoid;
 
             #endregion
+
             #region transaction References
             //List<TransactionReferenceDTO> TransactionRefBycode = UIProcessManager.GetTransactionReferenceByreferring(NonListDataSource.Id);
             //List<TransactionReferenceDTO> refList = new List<TransactionReferenceDTO>();
@@ -1379,6 +1382,7 @@ namespace DocumentPrint.DTO
             //}
             voucherPrint.RefNo = NonListDataSource.Extension1;
             #endregion
+
             #region copy and department
             var CopyDescription = new List<string>();
             var OrganizationDepartment = new List<string>();
@@ -1629,6 +1633,7 @@ namespace DocumentPrint.DTO
                 //}
             }
             #endregion
+
             #region operators
             string oppText = "";
             if (activityList != null && activityList.Count > 0)
@@ -1686,9 +1691,49 @@ namespace DocumentPrint.DTO
 
             voucherPrint.VoucheroperatorsString = oppText;
             #endregion
+
+
+            var VoucherExtensionTransactionDescription = new List<string>();
+
+            var VoucherExtensionTransactionNumber = new List<string>();
+
+            if (!string.IsNullOrEmpty(rdatasource.VoucherHeader.FsNumber))
+            {
+                if (NonListDataSource.DefinitionId == 121) //CNETConstantes.REFUND)
+                {
+                    VoucherExtensionTransactionDescription.Add("RF No.");
+                }
+                else
+                {
+                    VoucherExtensionTransactionDescription.Add("FS No.");
+                }
+                VoucherExtensionTransactionNumber.Add(rdatasource.VoucherHeader.FsNumber);
+            }
+
+            if (!string.IsNullOrEmpty(rdatasource.VoucherHeader.Mrc))
+            {
+                VoucherExtensionTransactionDescription.Add("MRC No.");
+                VoucherExtensionTransactionNumber.Add(rdatasource.VoucherHeader.Mrc);
+            }
+
+            var voucherExtensionString = "";
+            if (VoucherExtensionTransactionDescription.Count > 0)
+            {
+                try
+                {
+                    for (var i = 0; i < VoucherExtensionTransactionDescription.Count; i++)
+                    {
+                        voucherExtensionString += VoucherExtensionTransactionDescription[i] + "  " + VoucherExtensionTransactionNumber[i] + "  ";
+                    }
+                }
+                catch
+                {
+
+                }
+            }
+            voucherPrint.voucherExtensionString = voucherExtensionString;
             return voucherPrint;
         }
-
     }
 }
 

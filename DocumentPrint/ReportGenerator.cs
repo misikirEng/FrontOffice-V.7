@@ -345,7 +345,7 @@ namespace DocumentPrint
         {
             VoucherDTO Registrationvoucher = UIProcessManager.GetVoucherById(voucherid);
             MemoryStream filestream = null;
-            bool Exist = FTPInterface.FTPAttachment.InitalizePMSFTPAttachment(LocalBuffer.LocalBuffer.CompanyConsigneeData.Tin);
+            bool Exist = FTPInterface.FTPAttachment.InitalizeFTPAttachment(LocalBuffer.LocalBuffer.CompanyConsigneeData.Tin);
             if (Exist)
             {
                 FTPInterface.FTPAttachment.ORGUnitDefcode = Registrationvoucher.OriginConsigneeUnit.ToString();

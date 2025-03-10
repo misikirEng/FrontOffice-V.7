@@ -61,7 +61,6 @@ namespace LocalBuffer
         {
             BufferRefreshed = true;
             LoadLocalBuffer();
-
             GetUserRoleAccess();
         }
 
@@ -110,6 +109,7 @@ namespace LocalBuffer
             CheckandGetPMSPreference();
             Progress_Reporter.Show_Progress("Getting PMS CheckOut Type Data", "Please Wait ........");
             CheckPMSCheckoutType();
+            
             Progress_Reporter.Close_Progress();
         }
         public static bool PMSRecieptIsCheckout { get; set; }
@@ -229,7 +229,6 @@ namespace LocalBuffer
         {
             PreferenceBufferList = UIProcessManager.SelectAllPreference();
         }
-
 
         public static void CheckandGetPMSPreference()
         {

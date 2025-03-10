@@ -32,6 +32,7 @@ using DevExpress.XtraVerticalGrid;
 using CNET_V7_Domain.Domain.ConsigneeSchema;
 using CNET_V7_Domain.Domain.PmsSchema;
 using CNET_V7_Domain.Misc;
+using CNET.FrontOffice_V._7.Non_Navigatable_Modals;
 
 namespace CNET.FrontOffice_V._7.Forms.State_Change
 {
@@ -798,9 +799,10 @@ namespace CNET.FrontOffice_V._7.Forms.State_Change
         {
             try
             {
-                //frmAttachment frmAttachment = new frmAttachment();
-                //frmAttachment.RegExt = RegExtension;
-                //frmAttachment.ShowDialog();
+                frmAttachment frmAttachment = new frmAttachment();
+                frmAttachment.IntType = CNETConstantes.REGISTRATION_VOUCHER;
+                frmAttachment.RegExt = RegExtension;
+                frmAttachment.ShowDialog();
             }
             catch (Exception ex)
             {

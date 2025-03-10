@@ -306,7 +306,6 @@ namespace CNET.FrontOffice_V._7
                     organization.LoadEventArg.Args = "Group";
                     organization.LoadEventArg.Sender = null;
                     return organization;
-
                 case "main menu//end of day":
                     if (!CheckSecurity(fullName))
                     {

@@ -11,17 +11,24 @@ using System.Windows.Forms;
 
 
 using CNET.ERP.Client.Common.UI;
+using CNET_V7_Domain.Misc.PmsDTO;
+using CNET_V7_Domain.Domain.SettingSchema;
+using ProcessManager;
+using ERP.Attachement;
+using CNET.Progress.Reporter;
 
 
 namespace CNET.FrontOffice_V._7.Non_Navigatable_Modals
 {
     public partial class frmAttachment : UILogicBase
     {
-        public RegistrationListVM RegExt { get; set; }
+        public RegistrationListVMDTO RegExt { get; set; }
 
         public bool IsFromProfile { get; set; }
-        public string ConsigneeId { get; set; }
+        public int ConsigneeId { get; set; }
         public int IntType { get; set; }
+
+        private ERP_Attachments atta = null;
 
         public frmAttachment()
         {
@@ -42,38 +49,40 @@ namespace CNET.FrontOffice_V._7.Non_Navigatable_Modals
             }
             try
             {
-                CNETInfoReporter.WaitForm("Loading Attachments", "Please Wait...");
+                Progress_Reporter.Show_Progress("Loading Attachments", "Please Wait...");
 
-                List<SystemConstantDTO> lookups = LocalBuffer.SystemConstantDTOBufferList.Where(l => l.Type.ToLower() == "attachment catagory").ToList();
+                List<SystemConstantDTO> lookups = LocalBuffer.LocalBuffer.SystemConstantDTOBufferList.Where(l => l.Category != null && l.Category.ToLower() == "attachment catagory").ToList();
                 if (lookups != null)
                 {
-                    lookups = lookups.Where(c => c.code != CNETConstantes.ATTACHMENT_CATAGORY_COMPANYLOGO
-                        && c.code != CNETConstantes.ATTACHMENT_CATAGORY_CATALOGUE
-                        && c.code != CNETConstantes.ATTACHMENT_CATAGORY_MANUAL).ToList();
+                    lookups = lookups.Where(c => c.Id != CNETConstantes.ATTACHMENT_CATAGORY_COMPANYLOGO
+                        && c.Id != CNETConstantes.ATTACHMENT_CATAGORY_CATALOGUE
+                        && c.Id != CNETConstantes.ATTACHMENT_CATAGORY_MANUAL).ToList();
                 }
 
-                string code = "";
+                int? code = null;
                 if (IsFromProfile)
                 {
                     code = ConsigneeId;
                 }
                 else
                 {
-                    code = RegExt.Registration;
+                    FTPInterface.FTPAttachment.ORGUnitDefcode = LocalBuffer.LocalBuffer.CurrentDeviceConsigneeUnit.ToString();
+                    code = RegExt.Id; 
                 }
 
-                atta = new CNET_Attachments(code,IntType, false, lookups);
+                atta = new ERP_Attachments(code.Value,IntType, false, lookups);
+              
                 atta.Dock = DockStyle.Fill;
                 pnl_attachment.Controls.Clear();
                 pnl_attachment.Controls.Add(atta);
-                CNETInfoReporter.Hide();
+                Progress_Reporter.Close_Progress();
                 return true;
 
             }
             catch (Exception ex)
             {
-                CNETInfoReporter.Hide();
-                SystemMessage.ShowModalInfoMessage("Error in initializing attachments. Detail: " + ex.Message, "ERROR");
+                Progress_Reporter.Close_Progress();
+                MessageBox.Show("Error in initializing attachments. Detail: " + ex.Message, "ERROR");
                 return false;
             }
         }
@@ -91,11 +100,11 @@ namespace CNET.FrontOffice_V._7.Non_Navigatable_Modals
             if (atta == null) return;
             if (IsFromProfile)
             {
-                atta.OpenNewAttachment(ConsigneeId, IntType);
+                atta.OpenNewAttachment(ConsigneeId,false, IntType);
             }
             else
             {
-                atta.OpenNewAttachment(RegExt.Registration, IntType);
+                atta.OpenNewAttachment(RegExt.Id,true, IntType);
             }
         }
 
@@ -112,7 +121,7 @@ namespace CNET.FrontOffice_V._7.Non_Navigatable_Modals
             }
             else
             {
-                atta.DeleteAttachment(RegExt.Registration);
+                atta.DeleteAttachment(RegExt.Id);
 
             }
         }

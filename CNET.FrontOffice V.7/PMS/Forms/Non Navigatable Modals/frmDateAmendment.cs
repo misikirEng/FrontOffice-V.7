@@ -321,6 +321,10 @@ namespace CNET.FrontOffice_V._7.Forms.Non_Navigatable_Modals
                     return;
                 }
 
+                //RateCodeDetailDTO rateCodeDetai = UIProcessManager.GetRateCodeDetailById(regDetail.RateCode.Value);
+
+                //if (rateCodeDetai.RateCodeHeader == registration.RateCode)
+                //{
                 //update Rate Adjustment
                 RateAdjustmentDTO rateAdju = UIProcessManager.GetRateAdjustmentByvoucher(RegistrationExt.Id);
                 if (rateAdju != null)
@@ -330,6 +334,10 @@ namespace CNET.FrontOffice_V._7.Forms.Non_Navigatable_Modals
                     rateAdju.EndDate = deDepartureDate.DateTime;
                     RateAdjustmentDTO isRateAdjusUpdated = UIProcessManager.UpdateRateAdjustment(rateAdju);
                 }
+                //}
+                //else
+                //    regDetail.Adjustment =0;
+
 
                 List<GeneratedRegistrationDTO> Registrationlist = UIProcessManager.AmendRegistrationDate(RegistrationExt.lastState.Value, regDetail, registration, deArrivalDate.DateTime.Date, deDepartureDate.DateTime.Date, SelectedHotelcode);
 

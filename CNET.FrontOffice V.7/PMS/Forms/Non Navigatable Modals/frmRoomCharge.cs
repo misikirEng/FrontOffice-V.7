@@ -524,8 +524,8 @@ namespace CNET.FrontOffice_V._7.Forms.Non_Navigatable_Modals
             gcRoomTaxPosting.RefreshDataSource();
             rpgNoNights.Visible = false;
             postType = "Today";
-            beiFrom.EditValue = CurrentTime.Value;
-            beiTo.EditValue = CurrentTime.Value.AddDays(1);
+            beiFrom.EditValue = CurrentTime.Value.Date;
+            beiTo.EditValue = CurrentTime.Value.Date.AddDays(1);
 
         }
 

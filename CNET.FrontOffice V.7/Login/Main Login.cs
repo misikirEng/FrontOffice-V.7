@@ -118,27 +118,19 @@ namespace CNET.FrontOffice_V._7
                 SystemMessage.ShowModalInfoMessage("Failed to Get Server Date Time !!", "ERROR");
                 this.Close();
                 return;
-            }
+            } 
+            DateTime ComputerdateTime = DateTime.Now; 
+            TimeZoneInfo localTimeZone = TimeZoneInfo.Local; 
 
+            if(localTimeZone.DisplayName != "(UTC+03:00) Nairobi")
+            {
+                XtraMessageBox.Show("Please Fix Date Time Zone " + Environment.NewLine +
+                    "It Should be :- (UTC+03:00) Nairobi" +Environment.NewLine+
+                    "Current Device Time Zone is :- " + localTimeZone.DisplayName, "ERROR");
 
-
-
-
-            DateTime ComputerdateTime = DateTime.Now;
-
-
-
-            string UTCDateandTime = ("UTC Date and Time: " + DateTime.UtcNow);
-
-
-            TimeZoneInfo localTimeZone = TimeZoneInfo.Local;
-            string TimeZone = ("Time Zone: " + localTimeZone.DisplayName);
-            string StandardTimeName = ("Standard Time Name: " + localTimeZone.StandardName);
-            string DaylightTimeName = ("Daylight Time Name: " + localTimeZone.DaylightName);
-
-
-
-
+                this.Close();
+                return;
+            } 
             if (ServerDatetime.Value.Date != ComputerdateTime.Date)
             {
                 SystemMessage.ShowModalInfoMessage("There is a Difference b/n Server and Computer Date !!" + Environment.NewLine

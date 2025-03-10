@@ -422,7 +422,7 @@ namespace CNET.FrontOffice_V._7.Forms.Non_Navigatable_Modals
                         RegistrationDetailDTO savedRegDetail = UIProcessManager.CreateRegistrationDetail(newRegDetail);
                         if (savedRegDetail != null)
                         {
-                            List<PackagesToPostDTO> pkToPostList = UIProcessManager.GetPackagesToPostByRegistrationDetail(savedRegDetail.Id).ToList();
+                            List<PackagesToPostDTO> pkToPostList = UIProcessManager.GetPackagesToPostByRegistrationDetail(regDetail.Id).ToList();
                             if (pkToPostList == null || pkToPostList.Count == 0)
                                 continue;
                             foreach (var ptp in pkToPostList)

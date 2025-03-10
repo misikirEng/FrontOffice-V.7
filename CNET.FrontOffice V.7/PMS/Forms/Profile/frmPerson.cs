@@ -43,6 +43,7 @@ using static DevExpress.Xpo.Helpers.AssociatedCollectionCriteriaHelper;
 using Pr22.Processing;
 using Pr22.Task;
 using Pr22;
+using CNET.FrontOffice_V._7.PMS.PassportScanner.X_Mini;
 
 namespace CNET.FrontOffice_V._7.Forms
 {
@@ -89,6 +90,8 @@ namespace CNET.FrontOffice_V._7.Forms
 
         private DeviceDTO device = null;
         private bool isARH = false;
+        private bool isWinton = false;
+        private bool isXmini = false;
         private bool isFlatBedScanner = false;
         private DeviceDTO scanDevice = null;
 
@@ -598,10 +601,17 @@ namespace CNET.FrontOffice_V._7.Forms
 
                     if (checkPassportScanner())
                     {
-                        //Connect to passport scanner
-                        //Progress_Reporter.Show_Progress("Connecting to passport scanner...");
-                        pr = new Pr22.DocumentReaderDevice();
-                        isConnected = ConnectPassportScanner();
+                            //Connect to passport scanner
+                            //Progress_Reporter.Show_Progress("Connecting to passport scanner...");
+                            //pr = new Pr22.DocumentReaderDevice();
+                            isConnected = ConnectPassportScanner();
+                        //if (isARH)
+                        //{
+                        //}
+                        //else if (isXmini)
+                        //{
+                        //}
+
                     }
 
 
@@ -624,6 +634,7 @@ namespace CNET.FrontOffice_V._7.Forms
                         if (passportConfigList != null)
                         {
                             ConfigurationDTO config = passportConfigList.Where(pc => pc.Attribute == "Image URL").FirstOrDefault();
+                            
                             path = config != null ? config.CurrentValue.ToString() : "";
                         }
                     }
@@ -948,7 +959,7 @@ namespace CNET.FrontOffice_V._7.Forms
                 //load load attachment 
                 try
                 {
-                    bool Exist = FTPInterface.FTPAttachment.InitalizePMSFTPAttachment(LocalBuffer.LocalBuffer.CompanyConsigneeData.Tin);
+                    bool Exist = FTPInterface.FTPAttachment.InitalizeFTPAttachment(LocalBuffer.LocalBuffer.CompanyConsigneeData.Tin, LocalBuffer.LocalBuffer.CurrentDeviceConsigneeUnit.ToString());
                     if (Exist && !string.IsNullOrEmpty(focusedPerson.ConsigneeImageUrl))
                     {
                         pePassPortImage.Image = FTPInterface.FTPAttachment.GetImageFromFTP(focusedPerson.ConsigneeImageUrl);
@@ -1131,7 +1142,6 @@ namespace CNET.FrontOffice_V._7.Forms
 
             rpgAttachment.Visible = false;
             cacTitle.EditValue = _defTitle;
-
             string currentVoCode = null;
             teLastName.Text = "";
             if (GSLType == CNETConstantes.CONTACT)
@@ -1194,6 +1204,8 @@ namespace CNET.FrontOffice_V._7.Forms
             txtkebele.EditValue = null;
             txtstreet.EditValue = null;
             txtaddress1.EditValue = null;
+            pePassPortImage.Image = null;
+            cacNationality.EditValue = null;
             //var defaultTit = personTitleList.FirstOrDefault(c => c.isDefault);
             //if (defaultTit != null)
             //{
@@ -1340,53 +1352,54 @@ namespace CNET.FrontOffice_V._7.Forms
                 consigneeBuffer.consigneeUnits = CreateConssigneeUnit(_personToEdit.MainConsigneeUnit);
 
 
-                if (passportConfigList != null)
+                // Attachment
+                if (scanDevice != null)
                 {
-                    ConfigurationDTO imageDestination = passportConfigList.Where(pc => pc.Attribute == "Image Destination").FirstOrDefault();
-                    // Attachment
-                    if (scanDevice != null)
+                    string strImgPath;
+                    string nameAndYear = imageName + DateTime.Now.ToString("yyyyMMdd_hhmmss");
+                    if (pePassPortImage.Image != null)
                     {
-                        string strImgPath;
-                        string nameAndYear = imageName + DateTime.Now.ToString("yyyyMMdd_hhmmss");
-                        if (pePassPortImage.Image != null)
+                        // Progress_Reporter.Show_Progress("Updating Attachment");
+                        //if (isARH || isFlatBedScanner)
+                        //{
+
+                        if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
                         {
-                            // Progress_Reporter.Show_Progress("Updating Attachment");
-                            if (isARH || isFlatBedScanner)
+                            string localdirectory = Environment.CurrentDirectory + "\\Passport Scanner Images";
+                            if (!Directory.Exists(localdirectory))
                             {
-
-                                string localdirectory = Environment.CurrentDirectory + "\\Passport Scanner Images";
-                                if (!Directory.Exists(localdirectory))
-                                {
-                                    Directory.CreateDirectory(localdirectory);
-                                }
-                                path = localdirectory;
-
-                                strImgPath = @path + "/" + nameAndYear + ".jpg";
-                                pePassPortImage.Image.Save(@strImgPath);
-                                consigneeBuffer.consignee.DefaultImageUrl = strImgPath;
-
-
-                                bool Exist = FTPInterface.FTPAttachment.InitalizePMSFTPAttachment(TINNumber);
-                                if (Exist)
-                                {
-                                    string FTPLocation = FTPInterface.FTPAttachment.SendPMSGuestImageAttachement(consigneeBuffer.consignee.Code, pePassPortImage.Image);
-                                    consigneeBuffer.consignee.DefaultImageUrl = FTPLocation;
-                                }
-                                else
-                                {
-                                    consigneeBuffer.consignee.DefaultImageUrl = strImgPath;
-                                }
+                                Directory.CreateDirectory(localdirectory);
                             }
-                            else
-                            {
-                                consigneeBuffer.consignee.DefaultImageUrl = wintonePassportImageFullPath;
-                            }
-                            //CNETInfoReporter.Hide();
+                            path = localdirectory;
+
                         }
 
+                        strImgPath = @path + "/" + nameAndYear + ".jpg";
+                        pePassPortImage.Image.Save(@strImgPath);
+                        consigneeBuffer.consignee.DefaultImageUrl = strImgPath;
+
+
+                        bool Exist = FTPInterface.FTPAttachment.InitalizeFTPAttachment(TINNumber);
+                        if (Exist)
+                        {
+                            string FTPLocation = FTPInterface.FTPAttachment.SendConsigneeImageAttachement(CNETConstantes.GUEST, consigneeBuffer.consignee.Code, pePassPortImage.Image);
+                            consigneeBuffer.consignee.DefaultImageUrl = FTPLocation;
+                        }
+                        else
+                        {
+                            consigneeBuffer.consignee.DefaultImageUrl = strImgPath;
+                        }
+                        //}
+                        //else
+                        //{
+                        //    consigneeBuffer.consignee.DefaultImageUrl = wintonePassportImageFullPath;
+                        //}
+                        //CNETInfoReporter.Hide();
                     }
 
                 }
+
+                
 
                 ConsigneeBuffer isUpdate = UIProcessManager.UpdateConsigneeBuffer(consigneeBuffer);
                 if (isUpdate != null)
@@ -1678,75 +1691,59 @@ namespace CNET.FrontOffice_V._7.Forms
                     consigneeBuffer.consignee.CreatedOn = DateTime.Now;
 
 
-                    if (passportConfigList != null && passportConfigList.Count > 0)
+                    
+                    // Attachment
+                    if (scanDevice != null)
                     {
-                        ConfigurationDTO imageDestination = passportConfigList.Where(pc => pc.Attribute == "Image Destination").FirstOrDefault();
-
-                        // Attachment
-                        if (scanDevice != null)
+                        string strImgPath;
+                        string nameAndYear = imageName + DateTime.Now.ToString("yyyyMMdd_hhmmss");
+                        if (pePassPortImage.Image != null)
                         {
-                            string strImgPath;
-                            string nameAndYear = imageName + DateTime.Now.ToString("yyyyMMdd_hhmmss");
-                            if (pePassPortImage.Image != null)
-                            {
-                                //  Attachment atta = new Attachment();
-                                if (isARH || isFlatBedScanner)
-                                {
-                                    if (path == "")
+                            //  Attachment atta = new Attachment();
+                            //if (isARH || isFlatBedScanner)
+                            //{
+                            if (string.IsNullOrEmpty(path)  || !Directory.Exists(path))
+                            { 
+                                    string localdirectory = Environment.CurrentDirectory + "\\Passport Scanner Images";
+                                    if (!Directory.Exists(localdirectory))
                                     {
-                                        if (!Directory.Exists(@"C:\Passport Scanner Images"))
-                                        {
-                                            Directory.CreateDirectory(@"C:\Passport Scanner Images");
-                                        }
-                                        path = @"C:\Passport Scanner Images";
+                                        Directory.CreateDirectory(localdirectory);
                                     }
-                                    if (path != "" && !Directory.Exists(path))
-                                    {
-                                        try
-                                        {
-                                            Directory.CreateDirectory(path);
-                                        }
-                                        catch
-                                        {
-                                            if (!Directory.Exists(@"C:\Passport Scanner Images"))
-                                            {
-                                                Directory.CreateDirectory(@"C:\Passport Scanner Images");
-                                            }
-                                            path = @"C:\Passport Scanner Images";
-                                        }
-                                    }
-
-                                    strImgPath = @path + "/" + nameAndYear + ".jpg";
-                                    pePassPortImage.Image.Save(@strImgPath);
-                                    //if (imageDestination != null)
-                                    //{
-                                    //    consigneeBuffer.consignee.DefaultImageUrl = strImgPath;
-                                    //}
-
-                                    bool Exist = FTPInterface.FTPAttachment.InitalizePMSFTPAttachment(TINNumber);
-                                    if (Exist)
-                                    {
-                                        string FTPLocation = FTPInterface.FTPAttachment.SendPMSGuestImageAttachement(consigneeBuffer.consignee.Code, pePassPortImage.Image);
-                                        consigneeBuffer.consignee.DefaultImageUrl = FTPLocation;
-                                    }
-                                    else
-                                    {
-                                        consigneeBuffer.consignee.DefaultImageUrl = strImgPath;
-                                    }
-                                }
-                                else
-                                {
-                                    if (imageDestination != null)
-                                    {
-                                        consigneeBuffer.consignee.DefaultImageUrl = wintonePassportImageFullPath;
-                                    }
-                                }
-                                 
+                                    path = localdirectory;
+                                
                             }
+
+                            strImgPath = @path + "/" + nameAndYear + ".jpg";
+                            pePassPortImage.Image.Save(@strImgPath);
+                            //if (imageDestination != null)
+                            //{
+                            //    consigneeBuffer.consignee.DefaultImageUrl = strImgPath;
+                            //}
+
+                            bool Exist = FTPInterface.FTPAttachment.InitalizeFTPAttachment(TINNumber,LocalBuffer.LocalBuffer.CurrentDeviceConsigneeUnit.ToString());
+                            if (Exist)
+                            {
+                                string FTPLocation = FTPInterface.FTPAttachment.SendConsigneeImageAttachement(CNETConstantes.GUEST, consigneeBuffer.consignee.Code, pePassPortImage.Image);
+                                consigneeBuffer.consignee.DefaultImageUrl = FTPLocation;
+                            }
+                            else
+                            {
+                                consigneeBuffer.consignee.DefaultImageUrl = strImgPath;
+                            }
+                            //}
+                            //else
+                            //{
+                            //    if (imageDestination != null)
+                            //    {
+                            //        consigneeBuffer.consignee.DefaultImageUrl = wintonePassportImageFullPath;
+                            //    }
+                            //}
 
                         }
 
                     }
+
+
 
 
 
@@ -1849,6 +1846,7 @@ namespace CNET.FrontOffice_V._7.Forms
                         {
                             SavedPerson = UIProcessManager.GetConsigneeById(isCreated.consignee.Id);
                             LocalBuffer.LocalBuffer.ConsigneeViewBufferList.Add(SavedPerson);
+                            LocalBuffer.LocalBuffer.AllGuestConsigneeViewlist.Add(SavedPerson);
                             // ((frmMultipleRoomCheckIn)requesterForm.SubForm).SelectedPersonHandler.Invoke(person);
                             isFromRegisteration = false;
                             DialogResult = DialogResult.OK;
@@ -1861,6 +1859,7 @@ namespace CNET.FrontOffice_V._7.Forms
 
                             SavedPerson = UIProcessManager.GetConsigneeById(isCreated.consignee.Id);
                             LocalBuffer.LocalBuffer.ConsigneeViewBufferList.Add(SavedPerson);
+                            LocalBuffer.LocalBuffer.AllGuestConsigneeViewlist.Add(SavedPerson);
                             // SystemMessage.ShowModalInfoMessage("SAVED SUCESSESFULLY", "MESSAGE");
                         }
 
@@ -1930,7 +1929,7 @@ namespace CNET.FrontOffice_V._7.Forms
         {
            try
             {
-                if (!isARH)
+                if (isWinton)
                     MyDll.FreeIDCard();
             }
             catch (Exception ex)
@@ -1995,6 +1994,10 @@ namespace CNET.FrontOffice_V._7.Forms
                 }
                 try
                 {
+                    isARH = false;
+                    isWinton = false;
+                    isXmini = false;
+                    isFlatBedScanner = false;
                     if (article.Model == CNETConstantes.ARH_PASSPORT_SCANNER)
                     {
                         pr = new Pr22.DocumentReaderDevice();
@@ -2021,7 +2024,7 @@ namespace CNET.FrontOffice_V._7.Forms
 
                         if (nRet == 0)
                         {
-                            //XtraMessageBox.Show("Failed to load IDCard.dll!", "CNET ERP");
+                            XtraMessageBox.Show("Failed to load IDCard.dll!", "CNET ERP");
                             return false;
                         }
                         string id = scanDevice.DeviceValue;
@@ -2029,17 +2032,17 @@ namespace CNET.FrontOffice_V._7.Forms
                         nRet = MyDll.InitIDCard(arr, 0, null);
                         if (nRet != 0)
                         {
-                            // XtraMessageBox.Show("Failed to initialize the recognition engine!", "CNET ERP");
+                             XtraMessageBox.Show("Failed to initialize the recognition engine InitIDCard !", "CNET ERP");
                             return false;
                         }
                         MyDll.SetSpecialAttribute(1, 1);
                         m_bIsIDCardLoaded = true;
                         if (!m_bIsIDCardLoaded)
                         {
-                            //XtraMessageBox.Show("Failed to Load the recognition engine!", "CNET ERP");
+                            XtraMessageBox.Show("Failed to Load the recognition engine m_bIsIDCardLoaded !", "CNET ERP");
                             return false;
                         }
-                        isARH = false;
+                        isWinton = true;
                         flag = true;
                         toolStripStatusLabel1.Text = "" + article.Model + " is connected!";
                     }
@@ -2049,6 +2052,13 @@ namespace CNET.FrontOffice_V._7.Forms
                         isFlatBedScanner = true;
                         flag = true;
 
+                    }
+                    else if (article.Model == CNETConstantes.XMINI_PASSPORT_SCANNER)
+                    {
+                        toolStripStatusLabel1.Text = "" + article.Model + " is connected!";
+                        isXmini = true;
+                        flag = XMiniCommunication.checkDevice();
+                        
                     }
 
                 }
@@ -2061,8 +2071,6 @@ namespace CNET.FrontOffice_V._7.Forms
                     XtraMessageBox.Show("ERROR in connecting to passport scanner. DETAIL::" + ex.Message, "CNET_v2016", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return false;
                 }
-
-
             }
             else
             {
@@ -2070,8 +2078,6 @@ namespace CNET.FrontOffice_V._7.Forms
                 return false;
             }
         
-
-
             return flag;
         }
 
@@ -2250,6 +2256,7 @@ namespace CNET.FrontOffice_V._7.Forms
         {
             try
             {
+                CountryDTO country = null;
                 if (isFlatBedScanner)
                 {
                     Analyze analyze = new Analyze();
@@ -2258,6 +2265,8 @@ namespace CNET.FrontOffice_V._7.Forms
                     teFirstName.Text = person.firstName;
                     teMiddle.Text = person.middleName;
                     teLastName.Text = person.lastName;
+                    country = LocalBuffer.LocalBuffer.CountryBufferList.FirstOrDefault(x => x.IcaocountryCode == person.countrycode);
+                    cacNationality.EditValue = country == null ? null : country.Id;
                     // cacNationality.EditValue = person.nationality;
                     cacGender.EditValue = person.gender;
                     deDateOfBirth.EditValue = person.DOB;
@@ -2276,132 +2285,153 @@ namespace CNET.FrontOffice_V._7.Forms
                         pePassPortImage.Image = passImage;
                     }
                 }
-                else
+                else if (isWinton)
                 {
-                    if (!isARH)
+                    CaptureRecognizeWintone(false);
+                }
+                else if (isXmini)
+                {
+                    Image ScannedImage  = XMiniCommunication.ScanPassport();
+                    if (ScannedImage != null)
                     {
-                        CaptureRecognizeWintone(false);
-                    }
-                    else
-                    {
-                        #region Capture ARH
-                       
-                        ResetFields();
+                        Analyze analyze = new Analyze(ScannedImage);
+                        pePassPortImage.Image = ScannedImage;
 
-                        string givenName = "";
-                        string countryCode = "";
+                        var person = analyze.Person;
+                        if (person == null) return;
+                        teFirstName.Text = person.firstName;
+                        teMiddle.Text = person.middleName;
+                        teLastName.Text = person.lastName;
+                        tePassportNumber.Text = person.idNumber;
 
+                        country = LocalBuffer.LocalBuffer.CountryBufferList.FirstOrDefault(x=> x.IcaocountryCode  == person.countrycode);
+                        cacNationality.EditValue = country == null ? null : country.Id; 
+                        cacGender.EditValue = person.gender;
+                        deDateOfBirth.EditValue = person.DOB;
 
-                        DocScannerTask CaptureTask = new DocScannerTask();
-                        CaptureTask.Add((Pr22.Imaging.Light.White));
-                        EngineTask OcrTask = new EngineTask();
-                        OcrTask.Add(Pr22.Processing.FieldSource.Mrz, Pr22.Processing.FieldId.All);
-                        OcrTask.Add(Pr22.Processing.FieldSource.Viz, Pr22.Processing.FieldId.All);
-                        AnalyzeResult = pr.Scanner.Scan(CaptureTask, Pr22.Imaging.PagePosition.First).Analyze(OcrTask);
-
-                        foreach (Pr22.Processing.FieldReference field in AnalyzeResult.GetFields())
-                        {
-                            try
-                            {
-                                givenName = AnalyzeResult.GetField(FieldSource.Mrz, FieldId.Givenname).GetFormattedStringValue();
-                                if (givenName.Contains(' '))
-                                {
-                                    string[] names = givenName.Split(' ');
-                                    teFirstName.Text = names[0];
-                                    teMiddle.Text = names[1];
-                                }
-
-                                else
-                                {
-                                    teFirstName.Text = givenName;
-                                    teMiddle.Text = string.Empty;
-                                }
-                                teLastName.Text = AnalyzeResult.GetField(FieldSource.Mrz, FieldId.Surname).GetFormattedStringValue();
-                                AnalyzeResult.GetField(FieldSource.Mrz, FieldId.BirthDate).GetStandardizedStringValue();
-                                countryCode = AnalyzeResult.GetField(FieldSource.Mrz, FieldId.Nationality).GetFormattedStringValue();
-                                CountryDTO country = UIProcessManager.GetCountryByIcaocountryCode(countryCode);
-                                if (country != null)
-                                    cacNationality.EditValue = country.Id;
-
-                                if (AnalyzeResult.GetField(FieldSource.Mrz, FieldId.Sex).GetFormattedStringValue() == "F")
-                                {
-                                    cacGender.EditValue = CNETConstantes.FEMALE;
-                                }
-                                else
-                                {
-                                    cacGender.EditValue = CNETConstantes.MALE;
-
-                                }
-
-                                string mIdType = AnalyzeResult.GetField(FieldSource.Mrz, FieldId.DocType).GetFormattedStringValue();
-                                try
-                                {
-                                    if (mIdType == "PS" || mIdType == "P" || mIdType == "PF" || mIdType.StartsWith("P"))
-                                    {
-                                        leIDType.EditValue = CNETConstantes.PERSONAL_IDENTIFICATIONTYPE_PASPORT;
-                                    }
-                                    else if (mIdType == "VC" || mIdType.StartsWith("V"))
-                                    {
-                                        leIDType.EditValue = CNETConstantes.PERSONAL_IDENTIFICATIONTYPE_VISSA;
-                                    }
-                                }
-                                catch (Pr22.Exceptions.EntryNotFound)
-                                {
-                                }
-
-
-                                tePassportNumber.Text = AnalyzeResult.GetField(FieldSource.Mrz, FieldId.DocumentNumber).GetFormattedStringValue();
-                                string CountryCode = AnalyzeResult.GetField(FieldSource.Mrz, FieldId.IssueCountry).GetStandardizedStringValue();
-                                try
-                                {
-
-
-                                    RegionInfo info = new RegionInfo(CountryCode);
-                                    string converted = "";
-                                    converted = info.TwoLetterISORegionName.ToString().ToUpper();
-                                    RegionInfo newinfo = new RegionInfo(converted);
-
-                                }
-                                catch (ArgumentException argEx)
-                                {
-                                    AnalyzeResult.GetField(FieldSource.Mrz, FieldId.IssueCountry).GetFormattedStringValue();
-                                }
-
-
-                                string mYY = null;
-                                string mMM = null;
-                                string mDD = null;
-
-
-
-                                string stanbirth = AnalyzeResult.GetField(FieldSource.Mrz, FieldId.BirthDate).GetFormattedStringValue();
-                                if (!string.IsNullOrEmpty(stanbirth))
-                                {
-                                    if (stanbirth.Length == 6)
-                                    {
-                                        mYY = stanbirth.Substring(0, 2);
-                                        mMM = stanbirth.Substring(2, 2);
-                                        mDD = stanbirth.Substring(4, 2);
-                                        deDateOfBirth.EditValue = mMM + "/" + mDD + "/" + "19" + mYY;
-                                    }
-                                    else if (stanbirth.Length ==8)
-                                    {
-                                        mYY = stanbirth.Substring(0, 4);
-                                        mMM = stanbirth.Substring(4, 2);
-                                        mDD = stanbirth.Substring(6, 2);
-                                        deDateOfBirth.EditValue = mMM + "/" + mDD + "/"+ mYY;
-                                    }
-                                }
-
-                            }
-                            catch (Pr22.Exceptions.EntryNotFound) { }
-                        }
-                        pePassPortImage.Image = pr.Scanner.GetPage(0).Select(Pr22.Imaging.Light.White).ToBitmap();
-                        
-                        #endregion
                     }
                 }
-                
+                else if (isARH)
+                {
+                    #region Capture ARH
+
+                    ResetFields();
+
+                    string givenName = "";
+                    string countryCode = "";
+
+
+                    DocScannerTask CaptureTask = new DocScannerTask();
+                    CaptureTask.Add((Pr22.Imaging.Light.White));
+                    EngineTask OcrTask = new EngineTask();
+                    OcrTask.Add(Pr22.Processing.FieldSource.Mrz, Pr22.Processing.FieldId.All);
+                    OcrTask.Add(Pr22.Processing.FieldSource.Viz, Pr22.Processing.FieldId.All);
+                    AnalyzeResult = pr.Scanner.Scan(CaptureTask, Pr22.Imaging.PagePosition.First).Analyze(OcrTask);
+
+                    foreach (Pr22.Processing.FieldReference field in AnalyzeResult.GetFields())
+                    {
+                        try
+                        {
+                            givenName = AnalyzeResult.GetField(FieldSource.Mrz, FieldId.Givenname).GetFormattedStringValue();
+                            if (givenName.Contains(' '))
+                            {
+                                string[] names = givenName.Split(' ');
+                                teFirstName.Text = names[0];
+                                teMiddle.Text = names[1];
+                            }
+
+                            else
+                            {
+                                teFirstName.Text = givenName;
+                                teMiddle.Text = string.Empty;
+                            }
+                            teLastName.Text = AnalyzeResult.GetField(FieldSource.Mrz, FieldId.Surname).GetFormattedStringValue();
+                            AnalyzeResult.GetField(FieldSource.Mrz, FieldId.BirthDate).GetStandardizedStringValue();
+                            countryCode = AnalyzeResult.GetField(FieldSource.Mrz, FieldId.Nationality).GetFormattedStringValue();
+                            country = LocalBuffer.LocalBuffer.CountryBufferList.FirstOrDefault(x => x.IcaocountryCode == countryCode);
+                            if (country != null)
+                                cacNationality.EditValue = country.Id;
+                           
+
+                            if (AnalyzeResult.GetField(FieldSource.Mrz, FieldId.Sex).GetFormattedStringValue() == "F")
+                            {
+                                cacGender.EditValue = CNETConstantes.FEMALE;
+                            }
+                            else
+                            {
+                                cacGender.EditValue = CNETConstantes.MALE;
+
+                            }
+
+                            string mIdType = AnalyzeResult.GetField(FieldSource.Mrz, FieldId.DocType).GetFormattedStringValue();
+                            try
+                            {
+                                if (mIdType == "PS" || mIdType == "P" || mIdType == "PF" || mIdType.StartsWith("P"))
+                                {
+                                    leIDType.EditValue = CNETConstantes.PERSONAL_IDENTIFICATIONTYPE_PASPORT;
+                                }
+                                else if (mIdType == "VC" || mIdType.StartsWith("V"))
+                                {
+                                    leIDType.EditValue = CNETConstantes.PERSONAL_IDENTIFICATIONTYPE_VISSA;
+                                }
+                            }
+                            catch (Pr22.Exceptions.EntryNotFound)
+                            {
+                            }
+
+
+                            tePassportNumber.Text = AnalyzeResult.GetField(FieldSource.Mrz, FieldId.DocumentNumber).GetFormattedStringValue();
+                            string CountryCode = AnalyzeResult.GetField(FieldSource.Mrz, FieldId.IssueCountry).GetStandardizedStringValue();
+                            try
+                            {
+
+
+                                RegionInfo info = new RegionInfo(CountryCode);
+                                string converted = "";
+                                converted = info.TwoLetterISORegionName.ToString().ToUpper();
+                                RegionInfo newinfo = new RegionInfo(converted);
+
+                            }
+                            catch (ArgumentException argEx)
+                            {
+                                AnalyzeResult.GetField(FieldSource.Mrz, FieldId.IssueCountry).GetFormattedStringValue();
+                            }
+
+
+                            string mYY = null;
+                            string mMM = null;
+                            string mDD = null;
+
+
+
+                            string stanbirth = AnalyzeResult.GetField(FieldSource.Mrz, FieldId.BirthDate).GetFormattedStringValue();
+                            if (!string.IsNullOrEmpty(stanbirth))
+                            {
+                                if (stanbirth.Length == 6)
+                                {
+                                    mYY = stanbirth.Substring(0, 2);
+                                    mMM = stanbirth.Substring(2, 2);
+                                    mDD = stanbirth.Substring(4, 2);
+                                    deDateOfBirth.EditValue = mMM + "/" + mDD + "/" + "19" + mYY;
+                                }
+                                else if (stanbirth.Length == 8)
+                                {
+                                    mYY = stanbirth.Substring(0, 4);
+                                    mMM = stanbirth.Substring(4, 2);
+                                    mDD = stanbirth.Substring(6, 2);
+                                    deDateOfBirth.EditValue = mMM + "/" + mDD + "/" + mYY;
+                                }
+                            }
+
+                        }
+                        catch (Pr22.Exceptions.EntryNotFound) { }
+                    }
+                    pePassPortImage.Image = pr.Scanner.GetPage(0).Select(Pr22.Imaging.Light.White).ToBitmap();
+
+                    #endregion
+                }
+
+
             }
             catch (Exception ex)
             {
@@ -2696,7 +2726,7 @@ namespace CNET.FrontOffice_V._7.Forms
             {
                 try
                 {
-                    if (!isARH)
+                    if (isWinton)
                         MyDll.FreeIDCard();
                 }
                 catch (Exception ex)
@@ -2716,7 +2746,7 @@ namespace CNET.FrontOffice_V._7.Forms
         {
             try
             {
-                if (!isARH)
+                if (isWinton)
                     MyDll.FreeIDCard();
             }
             catch (Exception ex)
@@ -3028,19 +3058,19 @@ namespace CNET.FrontOffice_V._7.Forms
 
             if (beiCode.EditValue != null && !string.IsNullOrEmpty(beiCode.EditValue.ToString()))
             {
-                //var person = LocalBuffer.LocalBuffer.AllPersonViewBufferList.FirstOrDefault(p => p.code == beiCode.EditValue.ToString());
-                //if (person == null)
-                //{
-                //    SystemMessage.ShowModalInfoMessage("Please Select or Save a guest first!", "ERROR");
-                //    return;
-                //}
+                var person = LocalBuffer.LocalBuffer.ConsigneeViewBufferList.FirstOrDefault(p => p.Code == beiCode.EditValue.ToString());
+                if (person == null)
+                {
+                    SystemMessage.ShowModalInfoMessage("Please Select or Save a guest first!", "ERROR");
+                    return;
+                }
 
 
-                //frmAttachment _frmAttachment = new frmAttachment();
-                //_frmAttachment.IsFromProfile = true;
-                //_frmAttachment.ConsigneeId = person.code;
-                //_frmAttachment.IntType = CNETConstantes.CUSTOMERPERSO;
-                //_frmAttachment.ShowDialog();
+                frmAttachment _frmAttachment = new frmAttachment();
+                _frmAttachment.IsFromProfile = true;
+                _frmAttachment.ConsigneeId = person.Id;
+                _frmAttachment.IntType = CNETConstantes.GUEST;
+                _frmAttachment.ShowDialog();
             }
             else
             {

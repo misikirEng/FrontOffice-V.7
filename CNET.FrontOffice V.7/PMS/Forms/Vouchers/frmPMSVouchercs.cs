@@ -459,7 +459,7 @@ namespace CNET.FrontOffice_V._7.Forms.Vouchers
 
 
 
-                if (LocalBuffer.LocalBuffer.PMSRecieptIsCheckout)
+                if (LocalBuffer.LocalBuffer.PMSRecieptIsCheckout || RegistrationExt.AuthorizeDirectBill)
                 {
                     lcTransactionType.Visibility = LayoutVisibility.Never;
                     lcCRVFiscalGrouping.Visibility = LayoutVisibility.Never;
@@ -1146,6 +1146,38 @@ namespace CNET.FrontOffice_V._7.Forms.Vouchers
 
                 }
 
+                if (!LocalBuffer.LocalBuffer.PMSRecieptIsCheckout && VoucherType == CNETConstantes.CASHRECIPT && !RegistrationExt.AuthorizeDirectBill)
+                {
+                   
+
+                    if (cbeTransactionType.SelectedIndex == 0)
+                        POS_Settings.Voucher_Definition = CNETConstantes.CASH_SALES;
+                    else
+                        POS_Settings.Voucher_Definition = CNETConstantes.CREDITSALES;
+
+                    POS_Settings.IsError = true;
+                    POS_Settings.Machine_Consginee_Unit = LocalBuffer.LocalBuffer.CurrentDeviceConsigneeUnit.Value;
+                    POS_Settings.Machine_ID = LocalBuffer.LocalBuffer.CurrentDevice.Id;
+                    POS_Settings.Get_POS_Settings(LocalBuffer.LocalBuffer.ConfigurationBufferList);
+
+
+
+                    // FiscalPrinters FP = new FiscalPrinters();
+                    FiscalPrinters.GetInstance();
+                    if (!POS_Settings.IsError)
+                    {
+                        XtraMessageBox.Show("Unable to connect with fisical printer", "CNET_2016", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                        PMSDataLogger.LogMessage("frmPMSVoucher", "Unable to connect with fisical printer !!");
+
+                        return;
+                    }
+
+                    bool validatePMSLicense = CommonLogics.Validate_PMSPOS_License();
+                    if (!validatePMSLicense)
+                        return;
+
+                }
                 bool isSaved = true;
 
 
@@ -1364,7 +1396,7 @@ namespace CNET.FrontOffice_V._7.Forms.Vouchers
 
                 #region  for CASHRECIPT
 
-                if (VoucherType == CNETConstantes.CASHRECIPT && !LocalBuffer.LocalBuffer.PMSRecieptIsCheckout)
+                if (VoucherType == CNETConstantes.CASHRECIPT && !LocalBuffer.LocalBuffer.PMSRecieptIsCheckout && !RegistrationExt.AuthorizeDirectBill)
                 {
 
                     voucherbuffer.LineItemsBuffer = new List<LineItemBuffer>();
@@ -1873,7 +1905,7 @@ namespace CNET.FrontOffice_V._7.Forms.Vouchers
 
                     #region Printer Fiscal for CASHRECIPT
 
-                    if (VoucherType == CNETConstantes.CASHRECIPT && !LocalBuffer.LocalBuffer.PMSRecieptIsCheckout)
+                    if (VoucherType == CNETConstantes.CASHRECIPT && !LocalBuffer.LocalBuffer.PMSRecieptIsCheckout && !RegistrationExt.AuthorizeDirectBill)
                     {
                         if (cbeTransactionType.SelectedIndex == 0)
                             POS_Settings.Voucher_Definition = CNETConstantes.CASH_SALES;
@@ -1892,12 +1924,26 @@ namespace CNET.FrontOffice_V._7.Forms.Vouchers
                         if (!POS_Settings.IsError)
                         {
                             XtraMessageBox.Show("Unable to connect with fisical printer", "CNET_2016", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                            PMSDataLogger.LogMessage("frmPMSVoucher", "\"Unable to connect with fisical printer !!"); 
+
+
+                            PMSDataLogger.LogMessage("frmPMSVoucher", "Delete CASH RECIPT Voucher " + saved.Data.Voucher.Code + " frmPMSVoucher Form");
+                            UIProcessManager.DeleteVoucherObjects(saved.Data.Voucher.Id);
                             return;
                         }
                         bool validatePMSLicense = CommonLogics.Validate_PMSPOS_License();
                         if (!validatePMSLicense)
-                            return;
+                        {
+                           // XtraMessageBox.Show("License Error !!!", "CNET_2016", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+                            PMSDataLogger.LogMessage("frmPMSVoucher", "License Error !!");
+
+
+                            PMSDataLogger.LogMessage("frmPMSVoucher", "Delete CASH RECIPT Voucher " + saved.Data.Voucher.Code + " frmPMSVoucher Form");
+                            UIProcessManager.DeleteVoucherObjects(saved.Data.Voucher.Id);
+                            return;
+                        }
 
                         List<VwLineItemDetailViewDTO> dtoList = gcCRVLineItem.DataSource as List<VwLineItemDetailViewDTO>;
                         if (dtoList != null && dtoList.Count > 0)
@@ -1920,10 +1966,10 @@ namespace CNET.FrontOffice_V._7.Forms.Vouchers
 
                         POS_Settings.TotalServiceCharge = voucherbuffer.Voucher.AddCharge;
                         POS_Settings.TotalDiscount = voucherbuffer.Voucher.Discount;
-                        PMSDataLogger.LogMessage("frmPMSVoucher", "Total Service Charge " + POS_Settings.TotalServiceCharge);
-                        PMSDataLogger.LogMessage("frmPMSVoucher", "Total Discount " + POS_Settings.TotalDiscount);
+                        //PMSDataLogger.LogMessage("frmPMSVoucher", "Total Service Charge " + POS_Settings.TotalServiceCharge);
+                        //PMSDataLogger.LogMessage("frmPMSVoucher", "Total Discount " + POS_Settings.TotalDiscount);
+                        //PMSDataLogger.LogMessage("frmPMSVoucher", "Printint CASHRECIPT " + POS_Settings.TotalServiceCharge);
 
-                        PMSDataLogger.LogMessage("frmPMSVoucher", "Printint CASHRECIPT " + POS_Settings.TotalServiceCharge);
                         bool isprinted = FiscalPrinters.PrintOperation(POS_Settings.Voucher_Definition, _printItems, POS_Settings.printerType, new List<Consignee>() { customerDto }, 0, voucherbuffer.Voucher.Code,
                             null, null, LocalBuffer.LocalBuffer.CurrentLoggedInUser.UserName, POS_Settings.TotalDiscount, POS_Settings.TotalServiceCharge, voucherbuffer.Voucher.IssuedDate, voFinal.voucher.GrandTotal, RegistrationExt.Room, RegistrationExt.Registration);
 
@@ -2390,7 +2436,7 @@ namespace CNET.FrontOffice_V._7.Forms.Vouchers
                     teTotalAmount.Text = Math.Round((exRate * Convert.ToDecimal(teAmount.Text.ToString())), 2).ToString();
             }
 
-            if (!LocalBuffer.LocalBuffer.PMSRecieptIsCheckout && !string.IsNullOrEmpty(teTotalAmount.Text))
+            if (!LocalBuffer.LocalBuffer.PMSRecieptIsCheckout && !string.IsNullOrEmpty(teTotalAmount.Text) && !RegistrationExt.AuthorizeDirectBill)
             {
                 decimal unitamount = 0;
 

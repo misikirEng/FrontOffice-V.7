@@ -1129,49 +1129,53 @@ namespace CNET.FrontOffice_V._7.Night_Audit
 
 
 
-                POS_Settings.IsError = true;
-                POS_Settings.Machine_Consginee_Unit = LocalBuffer.LocalBuffer.CurrentDeviceConsigneeUnit.Value;
-                POS_Settings.Machine_ID = LocalBuffer.LocalBuffer.CurrentDevice.Id;
-                //POS_Settings.Voucher_Definition = CNETConstantes.CHECK_OUT_BILL_VOUCHER; ;
-                POS_Settings.Get_POS_Settings(LocalBuffer.LocalBuffer.ConfigurationBufferList);
-
-                // FiscalPrinters FP = new FiscalPrinters();
-                FiscalPrinters.GetInstance();
-
-                if (!POS_Settings.IsError)
+                if (LocalBuffer.LocalBuffer.PMSRecieptIsCheckout || regExtension.AuthorizeDirectBill)
                 {
-                    XtraMessageBox.Show("Unable to connect with fisical printer", "CNET_2016", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                    POS_Settings.IsError = true;
+                    POS_Settings.Machine_Consginee_Unit = LocalBuffer.LocalBuffer.CurrentDeviceConsigneeUnit.Value;
+                    POS_Settings.Machine_ID = LocalBuffer.LocalBuffer.CurrentDevice.Id;
+                    //POS_Settings.Voucher_Definition = CNETConstantes.CHECK_OUT_BILL_VOUCHER; ;
+                    POS_Settings.Get_POS_Settings(LocalBuffer.LocalBuffer.ConfigurationBufferList);
 
-                bool validatePMSLicense = CommonLogics.Validate_PMSPOS_License();
-                if (!validatePMSLicense)
-                    return;
+                    // FiscalPrinters FP = new FiscalPrinters();
+                    FiscalPrinters.GetInstance();
+
+                    if (!POS_Settings.IsError)
+                    {
+                        XtraMessageBox.Show("Unable to connect with fisical printer", "CNET_2016", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    bool validatePMSLicense = CommonLogics.Validate_PMSPOS_License();
+                    if (!validatePMSLicense)
+                        return;
 
 
-                //get print items
-                List<VwLineItemDetailViewDTO> dtoList = gvFrontOfficePOS.DataSource as List<VwLineItemDetailViewDTO>;
-                if (dtoList != null && dtoList.Count > 0)
-                {
-                    if (_printItems != null) _printItems.Clear();
-                    _printItems = GetPrintItems(dtoList, CNETConstantes.DAILY_ROOM_CHARGE_VOUCHER);
                 }
-                else
-                {
-                    SystemMessage.ShowModalInfoMessage("Unable to get print Items", "ERROR");
-                    return;
-                }
+                    //get print items
+                    List<VwLineItemDetailViewDTO> dtoList = gvFrontOfficePOS.DataSource as List<VwLineItemDetailViewDTO>;
+                    if (dtoList != null && dtoList.Count > 0)
+                    {
+                        if (_printItems != null) _printItems.Clear();
+                        _printItems = GetPrintItems(dtoList, CNETConstantes.DAILY_ROOM_CHARGE_VOUCHER);
+                    }
+                    else
+                    {
+                        SystemMessage.ShowModalInfoMessage("Unable to get print Items", "ERROR");
+                        return;
+                    }
 
-                if (_printItems == null || _printItems.Count == 0)
-                {
-                    SystemMessage.ShowModalInfoMessage("Unable to get print Items", "ERROR");
-                    return;
-                }
-                if (_printItems.Sum(x => x.UnitPrice) <= 0)
-                {
-                    SystemMessage.ShowModalInfoMessage("Unable to get print Items Price !!", "ERROR");
-                    return;
-                }
+                    if (_printItems == null || _printItems.Count == 0)
+                    {
+                        SystemMessage.ShowModalInfoMessage("Unable to get print Items", "ERROR");
+                        return;
+                    }
+                    if (_printItems.Sum(x => x.UnitPrice) <= 0)
+                    {
+                        SystemMessage.ShowModalInfoMessage("Unable to get print Items Price !!", "ERROR");
+                        return;
+                    }
+
 
 
                 //PMSDataLogger.LogMessage("frmFrontOfficePOS", "Printing Receipt FrontOfficePOS Form");
@@ -1239,7 +1243,7 @@ namespace CNET.FrontOffice_V._7.Night_Audit
 
                     bool isprinted = true;
 
-                    if (LocalBuffer.LocalBuffer.PMSRecieptIsCheckout)
+                    if (LocalBuffer.LocalBuffer.PMSRecieptIsCheckout || regExtension.AuthorizeDirectBill)
                         isprinted = FiscalPrinters.PrintOperation(POS_Settings.Voucher_Definition, _printItems, POS_Settings.printerType, new List<Consignee>() { customerDto }, 0, _currentVoucherCode,
                                          null, null, LocalBuffer.LocalBuffer.CurrentLoggedInUser.UserName, POS_Settings.TotalDiscount, POS_Settings.TotalServiceCharge, voucherbuffer.Voucher.IssuedDate, 0, RegExtension.Room, RegExtension.Registration);
                     if (!isprinted)
@@ -1291,7 +1295,7 @@ namespace CNET.FrontOffice_V._7.Night_Audit
 
                         _currentVoucherCode = GetCurrentId(1);
 
-                        if (LocalBuffer.LocalBuffer.PMSRecieptIsCheckout)
+                        if (LocalBuffer.LocalBuffer.PMSRecieptIsCheckout || regExtension.AuthorizeDirectBill)
                         {
                             VoucherDTO voucher = UIProcessManager.Patch_FS_No(isVoucherSaved.Voucher.Id, POS_Settings.CurrentFSNo, POS_Settings.fiscalprinterMRC);
 
@@ -1365,11 +1369,19 @@ namespace CNET.FrontOffice_V._7.Night_Audit
                     voucherbuffer.TransactionCurrencyBuffer = null;
 
 
-                    ResponseModel<VoucherBuffer> isVoucherUpdated = UIProcessManager.UpdateVoucherBuffer(voucherbuffer);
+                    VoucherDTO isVoucherUpdated = UIProcessManager.Patch_Voucher_LastState(voucherbuffer.Voucher.Id, voucherbuffer.Voucher.LastState);
+                    VoucherDTO check = UIProcessManager.GetVoucherById(voucherbuffer.Voucher.Id);
 
+                    if (check != null && check.LastState != voucherbuffer.Voucher.LastState)
+                    {
+                        PMSDataLogger.LogMessage("frmFrontOfficePOS", voucherbuffer.Voucher.Code + " Fail to Update Voucher Last State " + voucherbuffer.Voucher.LastState + " STATE with Receipt Done");
+                        PMSDataLogger.LogMessage("frmFrontOfficePOS", "Updating Registration Voucher FrontOfficePOS Form Second try !!");
+                        isVoucherUpdated = UIProcessManager.Patch_Voucher_LastState(voucherbuffer.Voucher.Id, voucherbuffer.Voucher.LastState);
+                        check = UIProcessManager.GetVoucherById(voucherbuffer.Voucher.Id);
+                    }
+                        //ResponseModel<VoucherBuffer> isVoucherUpdated = UIProcessManager.UpdateVoucherBuffer(voucherbuffer);
 
-
-                    if (isVoucherUpdated != null && isVoucherUpdated.Success)
+                    if (check != null && check.LastState == voucherbuffer.Voucher.LastState)
                     {
                         PMSDataLogger.LogMessage("frmFrontOfficePOS", voucherbuffer.Voucher.Code + " Voucher " + voucherbuffer.Voucher.LastState + " STATE with Receipt Done");
                         //Update Room to Dirty State
@@ -1405,8 +1417,8 @@ namespace CNET.FrontOffice_V._7.Night_Audit
                     else
                     {
                         PMSDataLogger.LogMessage("frmFrontOfficePOS", voucherbuffer.Voucher.Code + " Voucher Update CHECKED OUT STATE with Receipt Fail");
-                        PMSDataLogger.LogMessage("frmFrontOfficePOS", "Voucher Update Fail !!" + isVoucherUpdated.Message);
-                        XtraMessageBox.Show("Registration voucher is not updated. please try again." + Environment.NewLine + isVoucherUpdated.Message, "CNET ERP", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        PMSDataLogger.LogMessage("frmFrontOfficePOS", "Voucher Patch  Fail !!");
+                        XtraMessageBox.Show("Registration voucher is not updated. please try again.", "CNET ERP", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else

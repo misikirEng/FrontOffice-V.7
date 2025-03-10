@@ -562,6 +562,7 @@ namespace DocumentPrint.DTO
         public string vouchernote { get; set; }
         public string consignee { get; set; }
         public string remark { get; set; }
+        public string voucherExtensionString { get; set; }
         public int voucherDefinition { get; set; }
         public int NoOfLineItemPerPage { get; set; }
         public List<string> ActivityDefDesc { get; set; }

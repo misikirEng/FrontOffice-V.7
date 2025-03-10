@@ -12,7 +12,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Accord;
 using DevExpress.XtraTreeList.Nodes;
 using DevExpress.XtraTreeList;
 using CNET.POS.Common.Models;
@@ -280,19 +279,22 @@ namespace CNET.FrontOffice_V._7.Non_Navigatable_Modals
                         {
                             foreach (var ou in BankBranchlist)
                             {
-                                bank = new BankInformation();
-                                bank.Name = ou.Name;
-                                if (ou.ParentId == null)
+                                if (ou.Specialization == null || ou.Specialization == payment_Method)
                                 {
-                                    bank.OrganizationUnitDefinitionParent = parentBank.Id;
+                                    bank = new BankInformation();
+                                    bank.Name = ou.Name;
+                                    if (ou.ParentId == null)
+                                    {
+                                        bank.OrganizationUnitDefinitionParent = parentBank.Id;
+                                    }
+                                    else
+                                    {
+                                        bank.OrganizationUnitDefinitionParent = ou.ParentId.Value;
+                                    }
+                                    bank.OrganizationUnitDefinitionId = ou.Id;
+                                    bank.Id = ou.Id;
+                                    BankInformationlist.Add(bank);
                                 }
-                                else
-                                {
-                                    bank.OrganizationUnitDefinitionParent = ou.ParentId.Value;
-                                }
-                                bank.OrganizationUnitDefinitionId = ou.Id;
-                                bank.Id = ou.Id;
-                                BankInformationlist.Add(bank);
                             }
                         }
                     }

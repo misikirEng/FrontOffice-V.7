@@ -306,13 +306,10 @@ namespace CNET.FrontOffice_V._7.PMS.Common_Classes
             }
             else
             {
-                var CNETLibrary = UIProcessManager.SelectAllExchangeRate()
-                    .OrderByDescending(r => r.Date)
-                    .FirstOrDefault(r => r.FromCurrency == currency && (r.ToCurrency == defaultCurrency || r.ToCurrency == 0));
-                if (CNETLibrary != null)
-                    exchangeRate =
-                        CNETLibrary
-                            .Buying;
+                List<ExchangeRateDTO> AllExchangerate = UIProcessManager.SelectAllExchangeRate();
+                ExchangeRateDTO  Exchangerate= AllExchangerate.OrderByDescending(r => r.Date).FirstOrDefault(r => r.FromCurrency == currency && r.ToCurrency == defaultCurrency);
+                if (Exchangerate != null)
+                    exchangeRate =Exchangerate.Buying;
             }
             return exchangeRate;
         }

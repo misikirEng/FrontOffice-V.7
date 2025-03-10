@@ -203,7 +203,7 @@
             // 
             // ceFixed
             // 
-            ceFixed.Location = new Point(229, 112);
+            ceFixed.Location = new Point(229, 108);
             ceFixed.MenuManager = rcDateAmendment;
             ceFixed.Name = "ceFixed";
             ceFixed.Properties.Caption = "Fixed";
@@ -213,24 +213,26 @@
             // 
             // beRateCode
             // 
+            beRateCode.Enabled = false;
             beRateCode.Location = new Point(316, 84);
             beRateCode.Name = "beRateCode";
             editorButtonImageOptions1.Image = (Image)resources.GetObject("editorButtonImageOptions1.Image");
-            beRateCode.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default) });
+            beRateCode.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, false, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default) });
             beRateCode.Properties.ReadOnly = true;
-            beRateCode.Size = new Size(128, 24);
+            beRateCode.Size = new Size(128, 20);
             beRateCode.StyleController = layoutControl1;
             beRateCode.TabIndex = 92;
             beRateCode.ButtonClick += beRateCode_ButtonClick;
             // 
             // beRoom
             // 
+            beRoom.Enabled = false;
             beRoom.Location = new Point(99, 84);
             beRoom.Name = "beRoom";
             editorButtonImageOptions2.Image = (Image)resources.GetObject("editorButtonImageOptions2.Image");
-            beRoom.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default) });
+            beRoom.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, false, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default) });
             beRoom.Properties.ReadOnly = true;
-            beRoom.Size = new Size(126, 24);
+            beRoom.Size = new Size(126, 20);
             beRoom.StyleController = layoutControl1;
             beRoom.TabIndex = 91;
             // 
@@ -302,7 +304,7 @@
             // 
             // teAmount
             // 
-            teAmount.Location = new Point(99, 112);
+            teAmount.Location = new Point(99, 108);
             teAmount.MenuManager = rcDateAmendment;
             teAmount.Name = "teAmount";
             teAmount.Properties.Mask.EditMask = "d";
@@ -402,7 +404,7 @@
             layoutControlItem7.CustomizationFormText = "Room";
             layoutControlItem7.Location = new Point(0, 72);
             layoutControlItem7.Name = "layoutControlItem7";
-            layoutControlItem7.Size = new Size(217, 28);
+            layoutControlItem7.Size = new Size(217, 24);
             layoutControlItem7.Text = "Room";
             layoutControlItem7.TextSize = new Size(75, 13);
             // 
@@ -412,7 +414,7 @@
             layoutControlItem3.AppearanceItemCaption.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
             layoutControlItem3.Control = teAmount;
             layoutControlItem3.CustomizationFormText = "layoutControlItem3";
-            layoutControlItem3.Location = new Point(0, 100);
+            layoutControlItem3.Location = new Point(0, 96);
             layoutControlItem3.Name = "layoutControlItem3";
             layoutControlItem3.Size = new Size(217, 24);
             layoutControlItem3.Text = "Amount";
@@ -422,7 +424,7 @@
             // 
             layoutControlItem11.Control = ceFixed;
             layoutControlItem11.CustomizationFormText = "layoutControlItem11";
-            layoutControlItem11.Location = new Point(217, 100);
+            layoutControlItem11.Location = new Point(217, 96);
             layoutControlItem11.Name = "layoutControlItem11";
             layoutControlItem11.Size = new Size(219, 24);
             layoutControlItem11.TextSize = new Size(0, 0);
@@ -448,7 +450,7 @@
             layoutControlItem8.CustomizationFormText = "RateCode";
             layoutControlItem8.Location = new Point(217, 72);
             layoutControlItem8.Name = "layoutControlItem8";
-            layoutControlItem8.Size = new Size(219, 28);
+            layoutControlItem8.Size = new Size(219, 24);
             layoutControlItem8.Text = "RateCode";
             layoutControlItem8.TextSize = new Size(75, 13);
             // 
@@ -456,9 +458,9 @@
             // 
             emptySpaceItem1.AllowHotTrack = false;
             emptySpaceItem1.CustomizationFormText = "emptySpaceItem1";
-            emptySpaceItem1.Location = new Point(0, 124);
+            emptySpaceItem1.Location = new Point(0, 120);
             emptySpaceItem1.Name = "emptySpaceItem1";
-            emptySpaceItem1.Size = new Size(436, 58);
+            emptySpaceItem1.Size = new Size(436, 62);
             emptySpaceItem1.TextSize = new Size(0, 0);
             // 
             // layoutControlItem18

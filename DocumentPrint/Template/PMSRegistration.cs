@@ -18,7 +18,7 @@ namespace DocumentPrint.Grid
 
             InitializeComponent();
 
-            bool Exist = FTPInterface.FTPAttachment.InitalizePMSFTPAttachment(LocalBuffer.LocalBuffer.CompanyConsigneeData.Tin);
+            bool Exist = FTPInterface.FTPAttachment.InitalizeFTPAttachment(LocalBuffer.LocalBuffer.CompanyConsigneeData.Tin);
             if (Exist && !string.IsNullOrEmpty(registrationPrintOut.GuestDefaultImageUrl))
             {
                 picGuestImage.Image = FTPInterface.FTPAttachment.GetImageFromFTP(registrationPrintOut.GuestDefaultImageUrl);

@@ -107,6 +107,7 @@
             gridColumn11 = new DevExpress.XtraGrid.Columns.GridColumn();
             gridColumn12 = new DevExpress.XtraGrid.Columns.GridColumn();
             gridColumn13 = new DevExpress.XtraGrid.Columns.GridColumn();
+            riDiscripancydata = new DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit();
             gridColumn14 = new DevExpress.XtraGrid.Columns.GridColumn();
             gridColumn15 = new DevExpress.XtraGrid.Columns.GridColumn();
             layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
@@ -163,6 +164,7 @@
             layoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)gridControl1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)gridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)riDiscripancydata).BeginInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlGroup1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)emptySpaceItem3).BeginInit();
@@ -738,6 +740,7 @@
             gridControl1.MainView = gridView1;
             gridControl1.MenuManager = rcNightAudit;
             gridControl1.Name = "gridControl1";
+            gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] { riDiscripancydata });
             gridControl1.Size = new Size(1292, 433);
             gridControl1.TabIndex = 15;
             gridControl1.UseEmbeddedNavigator = true;
@@ -857,6 +860,16 @@
             gridColumn13.OptionsColumn.ReadOnly = true;
             gridColumn13.Visible = true;
             gridColumn13.VisibleIndex = 8;
+            // 
+            // riDiscripancydata
+            // 
+            riDiscripancydata.AutoHeight = false;
+            riDiscripancydata.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] { new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo) });
+            riDiscripancydata.Columns.AddRange(new DevExpress.XtraEditors.Controls.LookUpColumnInfo[] { new DevExpress.XtraEditors.Controls.LookUpColumnInfo("Id", "Id", 20, DevExpress.Utils.FormatType.None, "", false, DevExpress.Utils.HorzAlignment.Default, DevExpress.Data.ColumnSortOrder.None, DevExpress.Utils.DefaultBoolean.Default), new DevExpress.XtraEditors.Controls.LookUpColumnInfo("Description", "Description") });
+            riDiscripancydata.DisplayMember = "description";
+            riDiscripancydata.Name = "riDiscripancydata";
+            riDiscripancydata.NullText = "";
+            riDiscripancydata.ValueMember = "id";
             // 
             // gridColumn14
             // 
@@ -1104,6 +1117,7 @@
             layoutControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)gridControl1).EndInit();
             ((System.ComponentModel.ISupportInitialize)gridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)riDiscripancydata).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlGroup1).EndInit();
             ((System.ComponentModel.ISupportInitialize)layoutControlItem1).EndInit();
             ((System.ComponentModel.ISupportInitialize)emptySpaceItem3).EndInit();
@@ -1223,5 +1237,6 @@
         public DevExpress.XtraGrid.GridControl gridControl1;
         private DevExpress.XtraBars.BarEditItem beiHotel;
         private DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit reiHotel;
+        private DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit riDiscripancydata;
     }
 }

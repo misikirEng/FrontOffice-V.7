@@ -32,6 +32,7 @@ using System.Data;
 using CNET_V7_Domain.Misc.CommonTypes; 
 using System.Windows.Forms; 
 using System.Reflection.PortableExecutable;
+using static CNET.API.Manager.Common.commonRequest;
 
 namespace ProcessManager
 {
@@ -4121,7 +4122,18 @@ namespace ProcessManager
         public static List<VwArticleViewDTO> GetArticleViewByGslType(int gsltype)
         {
             return Task.Run(async () => await articleRequest.GetArticleViewByGslType(gsltype)).Result;
-        } 
+        }
+
+        public static List<VwAccompanyingViewDTO> GetAccompanyingGuestByVoucher(int voucher)
+        {
+            return Task.Run(async () => await articleRequest.GetAccompanyingGuestByVoucher(voucher)).Result;
+        }
+        public static List<VwVoucherLineItemDetailDTO> GetVoucherLightViewByDefinition(int defintion)
+        {
+            return Task.Run(async () => await articleRequest.GetVoucherLightViewByDefinition(defintion)).Result;
+        }
+        
+
         public static List<PackageDetailDTO> GetPackageDetailByHeader(int Id)
         {
             return Task.Run(async () => await pmsRequest.GetPackageDetailByHeader(Id)).Result;
@@ -5220,7 +5232,21 @@ namespace ProcessManager
                 return null;
             }
         }
-
+        public static List<VoucherDTO> GetVoucherByDefinition(int Definition)
+        {
+            try
+            {
+                Dictionary<string, string> Dictionaryvalue = new Dictionary<string, string>();
+                Dictionaryvalue.Add("Definition", Definition.ToString());
+                return Task.Run(async () => await filterRequest.GetFilterData<List<VoucherDTO>>("Voucher", Dictionaryvalue)).Result;
+ 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: GetVoucherBylocalCode" + Environment.NewLine + ex.Message);
+                return null;
+            }
+        }
         public static CountryDTO GetCountryByIcaocountryCode(string code)
         {
             try

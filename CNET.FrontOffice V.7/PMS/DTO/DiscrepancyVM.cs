@@ -16,7 +16,8 @@ namespace CNET.FrontOffice_V._7
         public string resstatus { get; set; }
         public string foperson { get; set; }
         public int? hkperson { get; set; }
-        public int? discrepancy { get; set; }
+        public int? discrepancyid { get; set; }
+        public string? discrepancy { get; set; }
         public int? roomdetail { get; set; }
         public string date { get; set; }
     }

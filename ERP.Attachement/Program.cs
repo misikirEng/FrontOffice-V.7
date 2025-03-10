@@ -1,3 +1,6 @@
+using CNET_V7_Domain.Domain.CommonSchema;
+
+
 namespace ERP.Attachement
 {
     internal static class Program
@@ -10,8 +13,8 @@ namespace ERP.Attachement
         {
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            //ApplicationConfiguration.Initialize();
+            //Application.Run(new ERP_Attachments(null, 1, true, 1));
         }
     }
 }

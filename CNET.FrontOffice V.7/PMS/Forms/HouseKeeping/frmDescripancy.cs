@@ -85,6 +85,7 @@ namespace CNET.FrontOffice_V._7.HouseKeeping
 
             checkBoxGroup1 = new List<BarCheckItem>() { sleep1, skip1, person1, dueout1, slPer1, skPer1 };
 
+           // riDiscripancydata.DataSource = LocalBuffer.LocalBuffer.LookUpBufferList.Where(x => x.Type == "Discrepancy").ToList();
             CustomizeNavigator();
         }
 
@@ -133,8 +134,8 @@ namespace CNET.FrontOffice_V._7.HouseKeeping
                                 {
                                     member.AddRange(mng.Where(x => x.resstatus == cb.AccessibleName).ToList());
                                 }
-                                member.AddRange(mng.Where(x => x.discrepancy == Convert.ToInt32(cb.AccessibleName)).ToList());
-
+                                //member.AddRange(mng.Where(x => x.discrepancy == Convert.ToInt32(cb.AccessibleName)).ToList());
+                                member.AddRange(mng.Where(x => x.discrepancy == cb.AccessibleName).ToList());
                                 break;
                         }
                     }
@@ -215,8 +216,9 @@ namespace CNET.FrontOffice_V._7.HouseKeeping
                         }
                         ddto.resstatus = foandresStatus.registrationStatus;
                     }
-                    ddto.hkperson = d.FoValue;
-                    ddto.discrepancy = d.DiscrepancyType;
+                    ddto.hkperson = d.FoValue; 
+                    ddto.discrepancyid = d.DiscrepancyType;
+                    ddto.discrepancy = d.Description;
                     ddto.roomdetail = d.RoomDetail;
                     ddto.date = d.Date.ToString();
                     DateTime dt = Convert.ToDateTime(d.Date);
@@ -519,7 +521,8 @@ namespace CNET.FrontOffice_V._7.HouseKeeping
                 //Text = ch.CheckState.ToString();
                 if (ch.Checked)
                 {
-                    List<DiscrepancyVM> rm = vacantlist.Where(x => x.discrepancy == Convert.ToInt32(ch.AccessibleName) & x.roomtype == selectedText).ToList();
+                   // List<DiscrepancyVM> rm = vacantlist.Where(x => x.discrepancy == Convert.ToInt32(ch.AccessibleName) & x.roomtype == selectedText).ToList();
+                    List<DiscrepancyVM> rm = vacantlist.Where(x => x.discrepancy == ch.AccessibleName & x.roomtype == selectedText).ToList();
                     filterHoldSelectedValue.AddRange(rm);
 
                 }
@@ -569,7 +572,8 @@ namespace CNET.FrontOffice_V._7.HouseKeeping
 
                 if (ch.Checked)
                 {
-                    List<DiscrepancyVM> rm = vacantlist.Where(x => x.discrepancy == Convert.ToInt32(ch.AccessibleName) & x.roomno == selectedText).ToList();
+                    //List<DiscrepancyVM> rm = vacantlist.Where(x => x.discrepancy == Convert.ToInt32(ch.AccessibleName) & x.roomno == selectedText).ToList();
+                    List<DiscrepancyVM> rm = vacantlist.Where(x => x.discrepancy ==ch.AccessibleName & x.roomno == selectedText).ToList();
                     filterHoldSelectedValue.AddRange(rm);
 
                 }
@@ -611,7 +615,7 @@ namespace CNET.FrontOffice_V._7.HouseKeeping
                 discre.hkStatusCombo.EditValue = drr.hkstatus;
                 discre.rmStatus.EditValue = drr.roomstatus;
                 discre.numberCombo.Value = Convert.ToInt32(drr.hkperson);
-                discre.discrepancyTextBox.EditValue = drr.discrepancy;
+                discre.discrepancyTextBox.EditValue = drr.discrepancyid;
                 discre.foPerson.Text = drr.foperson;
 
                 discre.StartPosition = FormStartPosition.CenterScreen;

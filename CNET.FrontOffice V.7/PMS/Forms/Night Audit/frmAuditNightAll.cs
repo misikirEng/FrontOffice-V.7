@@ -2968,10 +2968,10 @@ namespace CNET.FrontOffice_V._7.Night_Audit
             {
                 if (heldTran != null)
                 {
-                    Progress_Reporter.Show_Progress("Pushing...", "Please Wait......."); 
-                    
-                    
-                    var response = UIProcessManager.GetVoucherBufferById(heldTran.VoucherId); 
+                    Progress_Reporter.Show_Progress("Pushing...", "Please Wait.......");
+
+
+                    var response = UIProcessManager.GetVoucherBufferById(heldTran.VoucherId);
 
                     if (response == null || !response.Success)
                     {
@@ -2985,13 +2985,22 @@ namespace CNET.FrontOffice_V._7.Night_Audit
 
                     if (pushWorkflow == null)
                     {
-                        SystemMessage.ShowModalInfoMessage(string.Format("Please Define Workflow of PUSHED for {0} Voucher!", voDef == null ? "For The Current": voDef.Description.ToUpper()), "ERROR");
+                        SystemMessage.ShowModalInfoMessage(string.Format("Please Define Workflow of PUSHED for {0} Voucher!", voDef == null ? "For The Current" : voDef.Description.ToUpper()), "ERROR");
                         Progress_Reporter.Close_Progress();
                         return;
                     }
 
                     List<ActivityDTO> actList = UIProcessManager.GetActivityByreferenceandactivityDefinition(heldTran.VoucherId, pushWorkflow.Id).ToList();
-                    if (actList.Count == 0)
+
+                    if(pushWorkflow.MaxRepeat == 0)
+                    {
+                        SystemMessage.ShowModalInfoMessage("PUSHED  Workflow Max Repeat is 0 !!", "ERROR");
+                        Progress_Reporter.Close_Progress();
+                        return;
+                    }
+
+                    if (actList.Count < pushWorkflow.MaxRepeat) 
+                    //if (actList.Count == 0)
                     {
                         voucherbuffer.Activity = ActivityLogManager.SetupActivity(CurrentTime, pushWorkflow.Id, CNETConstantes.PMS_Pointer);
                         voucherbuffer.Voucher.IssuedDate = voucherbuffer.Voucher.IssuedDate.AddDays(1);
@@ -3014,7 +3023,7 @@ namespace CNET.FrontOffice_V._7.Night_Audit
                     }
                     else
                     {
-                        SystemMessage.ShowModalInfoMessage("It is already pushed !!!", "ERROR");
+                        SystemMessage.ShowModalInfoMessage("This Order Push has reached Max Repeat "+ actList.Count + " !!!", "ERROR");
                     }
                     Progress_Reporter.Close_Progress();
                 }
@@ -3277,7 +3286,7 @@ namespace CNET.FrontOffice_V._7.Night_Audit
                         MemoryStream PDFstream = _frmReport.ExportToPdfMemoryStream(pHolder.Name, CurrentTime);
                         if (PDFstream != null)
                         {
-                            bool Exist = FTPInterface.FTPAttachment.InitalizePMSFTPAttachment(TINNumber);
+                            bool Exist = FTPInterface.FTPAttachment.InitalizeFTPAttachment(TINNumber);
                             if (Exist)
                             {
                                 FTPInterface.FTPAttachment.ORGUnitDefcode = SelectedHotelcode.ToString();
@@ -3308,7 +3317,7 @@ namespace CNET.FrontOffice_V._7.Night_Audit
                     MemoryStream PDFstream = HomePage.dashboard.ExportToPdfMemoryStream();
                     if (PDFstream != null)
                     {
-                        bool Exist = FTPInterface.FTPAttachment.InitalizePMSFTPAttachment(TINNumber);
+                        bool Exist = FTPInterface.FTPAttachment.InitalizeFTPAttachment(TINNumber);
                         if (Exist)
                         {
                             FTPInterface.FTPAttachment.ORGUnitDefcode = SelectedHotelcode.ToString();
